@@ -184,6 +184,33 @@
     color: #f0c674;
     font-weight: 700;
   }
+  .quick-btns {
+    display: flex;
+    gap: 6px;
+    margin: 8px 0;
+    flex-wrap: wrap;
+  }
+  .quick-btn {
+    flex: 1;
+    min-width: 48px;
+    padding: 6px 0;
+    background: #0d1f17;
+    border: 1px solid #2a4a38;
+    border-radius: 6px;
+    color: #8fb89a;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .quick-btn:hover {
+    border-color: #f0c674;
+    color: #f0c674;
+  }
+  .quick-btn.active {
+    background: #1a3a2a;
+    border-color: #f0c674;
+    color: #f0c674;
+  }
 </style>
 </head>
 <body>
@@ -248,6 +275,13 @@
         <input type="number" id="turnPremium" value="0" min="0" oninput="update()">
       </div>
     </div>
+    <div class="quick-btns" id="turnQuickBtns">
+      <button class="quick-btn" onclick="setQuickPremium('turn',1.0)">100%</button>
+      <button class="quick-btn" onclick="setQuickPremium('turn',0.85)">85%</button>
+      <button class="quick-btn" onclick="setQuickPremium('turn',0.75)">75%</button>
+      <button class="quick-btn" onclick="setQuickPremium('turn',0.60)">60%</button>
+      <button class="quick-btn" onclick="setQuickPremium('turn',0.50)">50%</button>
+    </div>
     <div class="odds-bar" id="turnOddsBar"></div>
     <div class="info-text">买金 = 赔付 ÷ 赔率；赔付上限 = 底池。转牌爆了拿赔付不扣买金，不爆扣买金进河牌。</div>
   </div>
@@ -268,6 +302,13 @@
         <label>河牌买金 (¥)</label>
         <input type="number" id="riverPremium" value="50" min="0" oninput="update()">
       </div>
+    </div>
+    <div class="quick-btns" id="riverQuickBtns">
+      <button class="quick-btn" onclick="setQuickPremium('river',1.0)">100%</button>
+      <button class="quick-btn" onclick="setQuickPremium('river',0.85)">85%</button>
+      <button class="quick-btn" onclick="setQuickPremium('river',0.75)">75%</button>
+      <button class="quick-btn" onclick="setQuickPremium('river',0.60)">60%</button>
+      <button class="quick-btn" onclick="setQuickPremium('river',0.50)">50%</button>
     </div>
     <div class="odds-bar" id="riverOddsBar"></div>
     <div class="info-text">河牌 outs 可与转牌不同。只买河牌就把转牌买金设为0。</div>
@@ -495,6 +536,21 @@ function onOutsChange(prefix) {
   const outs = parseInt(document.getElementById(prefix+'Outs').value) || 1;
   document.getElementById(prefix+'Odds').textContent = getOdds(outs) + '×';
   renderOddsBar(prefix+'OddsBar', Math.min(outs,17), prefix);
+  update();
+}
+
+// 快捷比例按钮：按底池比例算买金（赔付额=底池×比例，买金=赔付额÷赔率）
+function setQuickPremium(prefix, ratio) {
+  const pot = parseFloat(document.getElementById('pot').value) || 0;
+  const outs = parseInt(document.getElementById(prefix+'Outs').value) || 1;
+  const odds = getOdds(outs);
+  if (odds <= 0) return;
+  const payout = Math.min(pot * ratio, pot);
+  const premium = payout / odds;
+  document.getElementById(prefix+'Premium').value = Math.round(premium * 100) / 100;
+  // 高亮当前按钮
+  document.querySelectorAll('#' + prefix + 'QuickBtns .quick-btn').forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
   update();
 }
 
