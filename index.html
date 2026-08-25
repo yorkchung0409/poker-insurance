@@ -276,11 +276,11 @@
       </div>
     </div>
     <div class="quick-btns" id="turnQuickBtns">
-      <button class="quick-btn" onclick="setQuickPremium('turn',1.0)">100%</button>
-      <button class="quick-btn" onclick="setQuickPremium('turn',0.85)">85%</button>
-      <button class="quick-btn" onclick="setQuickPremium('turn',0.75)">75%</button>
-      <button class="quick-btn" onclick="setQuickPremium('turn',0.60)">60%</button>
-      <button class="quick-btn" onclick="setQuickPremium('turn',0.50)">50%</button>
+      <button class="quick-btn" onclick="setQuickPremium('turn',1.0,this)">100%</button>
+      <button class="quick-btn" onclick="setQuickPremium('turn',0.85,this)">85%</button>
+      <button class="quick-btn" onclick="setQuickPremium('turn',0.75,this)">75%</button>
+      <button class="quick-btn" onclick="setQuickPremium('turn',0.60,this)">60%</button>
+      <button class="quick-btn" onclick="setQuickPremium('turn',0.50,this)">50%</button>
     </div>
     <div class="odds-bar" id="turnOddsBar"></div>
     <div class="info-text">买金 = 赔付 ÷ 赔率；赔付上限 = 底池。转牌爆了拿赔付不扣买金，不爆扣买金进河牌。</div>
@@ -304,11 +304,11 @@
       </div>
     </div>
     <div class="quick-btns" id="riverQuickBtns">
-      <button class="quick-btn" onclick="setQuickPremium('river',1.0)">100%</button>
-      <button class="quick-btn" onclick="setQuickPremium('river',0.85)">85%</button>
-      <button class="quick-btn" onclick="setQuickPremium('river',0.75)">75%</button>
-      <button class="quick-btn" onclick="setQuickPremium('river',0.60)">60%</button>
-      <button class="quick-btn" onclick="setQuickPremium('river',0.50)">50%</button>
+      <button class="quick-btn" onclick="setQuickPremium('river',1.0,this)">100%</button>
+      <button class="quick-btn" onclick="setQuickPremium('river',0.85,this)">85%</button>
+      <button class="quick-btn" onclick="setQuickPremium('river',0.75,this)">75%</button>
+      <button class="quick-btn" onclick="setQuickPremium('river',0.60,this)">60%</button>
+      <button class="quick-btn" onclick="setQuickPremium('river',0.50,this)">50%</button>
     </div>
     <div class="odds-bar" id="riverOddsBar"></div>
     <div class="info-text">河牌 outs 可与转牌不同。只买河牌就把转牌买金设为0。</div>
@@ -540,7 +540,7 @@ function onOutsChange(prefix) {
 }
 
 // 快捷比例按钮：按底池比例算买金（赔付额=底池×比例，买金=赔付额÷赔率）
-function setQuickPremium(prefix, ratio) {
+function setQuickPremium(prefix, ratio, btn) {
   const pot = parseFloat(document.getElementById('pot').value) || 0;
   const outs = parseInt(document.getElementById(prefix+'Outs').value) || 1;
   const odds = getOdds(outs);
@@ -549,8 +549,8 @@ function setQuickPremium(prefix, ratio) {
   const premium = payout / odds;
   document.getElementById(prefix+'Premium').value = Math.round(premium * 100) / 100;
   // 高亮当前按钮
-  document.querySelectorAll('#' + prefix + 'QuickBtns .quick-btn').forEach(btn => btn.classList.remove('active'));
-  event.target.classList.add('active');
+  document.querySelectorAll('#' + prefix + 'QuickBtns .quick-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
   update();
 }
 
