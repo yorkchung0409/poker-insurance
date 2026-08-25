@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>德州扑克保险计算器</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #0d1f17;
+    color: #e8d5a3;
+    min-height: 100vh;
+    padding: 16px;
+  }
+  .container { max-width: 720px; margin: 0 auto; }
+  h1 {
+    text-align: center;
+    font-size: 22px;
+    color: #f0c674;
+    margin-bottom: 16px;
+    letter-spacing: 2px;
+  }
+  .card {
+    background: #152a20;
+    border: 1px solid #2a4a38;
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 12px;
+  }
+  .card-title {
+    font-size: 14px;
+    color: #8fb89a;
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+  .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .row > div { flex: 1; min-width: 120px; }
+  label { font-size: 12px; color: #8fb89a; display: block; margin-bottom: 4px; }
+  input[type="number"] {
+    width: 100%;
+    background: #0d1f17;
+    border: 1px solid #2a4a38;
+    border-radius: 6px;
+    color: #e8d5a3;
+    padding: 8px 10px;
+    font-size: 15px;
+    outline: none;
+  }
+  input[type="number"]:focus { border-color: #f0c674; }
+
+  /* 选牌区 */
+  .card-slots { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+  .slot {
+    width: 42px; height: 58px;
+    border: 1px dashed #3a5a48;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; color: #4a6a58;
+    cursor: pointer;
+    background: #0d1f17;
+    position: relative;
+  }
+  .slot.filled {
+    border-style: solid;
+    border-color: #f0c674;
+    background: #fff;
+    color: #000;
+    font-weight: 700;
+    font-size: 16px;
+  }
+  .slot.filled.red { color: #c0392b; }
+  .slot .remove {
+    position: absolute; top: -6px; right: -6px;
+    width: 16px; height: 16px;
+    background: #c0392b; color: #fff;
+    border-radius: 50%; font-size: 11px;
+    display: none; align-items: center; justify-content: center;
+    cursor: pointer;
+  }
+  .slot.filled .remove { display: flex; }
+
+  /* 牌选择器弹窗 */
+  .picker-overlay {
+    display: none;
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 100;
+    align-items: center; justify-content: center;
+  }
+  .picker-overlay.active { display: flex; }
+  .picker {
+    background: #152a20;
+    border: 1px solid #2a4a38;
+    border-radius: 12px;
+    padding: 16px;
+    max-width: 360px;
+    width: 90%;
+  }
+  .picker h3 { color: #f0c674; font-size: 15px; margin-bottom: 10px; text-align: center; }
+  .picker-grid {
+    display: grid;
+    grid-template-columns: repeat(13, 1fr);
+    gap: 3px;
+  }
+  .picker-card {
+    aspect-ratio: 2/3;
+    background: #fff;
+    color: #000;
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 700;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    user-select: none;
+  }
+  .picker-card.red { color: #c0392b; }
+  .picker-card.disabled { opacity: 0.2; cursor: not-allowed; }
+  .picker-close {
+    display: block; margin: 12px auto 0;
+    background: #2a4a38; color: #e8d5a3;
+    border: none; padding: 8px 24px;
+    border-radius: 6px; cursor: pointer;
+    font-size: 13px;
+  }
+
+  /* 赔率条 */
+  .odds-bar {
+    display: flex; gap: 2px; margin: 8px 0;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+  .odds-cell {
+    flex: 1; min-width: 32px;
+    text-align: center;
+    padding: 6px 2px;
+    background: #0d1f17;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 1px solid transparent;
+  }
+  .odds-cell .mult { font-size: 13px; font-weight: 700; color: #f0c674; }
+  .odds-cell .outs { font-size: 10px; color: #6a8a78; }
+  .odds-cell.active { border-color: #f0c674; background: #1a3a2a; }
+
+  /* 结果区 */
+  .results { display: flex; gap: 8px; flex-direction: column; }
+  .result-item {
+    background: #0d1f17;
+    border-radius: 8px;
+    padding: 10px 12px;
+    border-left: 3px solid #2a4a38;
+  }
+  .result-item.hit { border-left-color: #e74c3c; }
+  .result-item.safe { border-left-color: #27ae60; }
+  .result-label { font-size: 12px; color: #8fb89a; margin-bottom: 4px; }
+  .result-values { display: flex; gap: 16px; }
+  .result-values span { font-size: 14px; }
+  .result-values .val { color: #f0c674; font-weight: 700; }
+  .result-values .profit-pos { color: #27ae60; }
+  .result-values .profit-neg { color: #e74c3c; }
+
+  .btn {
+    background: #f0c674;
+    color: #0d1f17;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .btn-secondary {
+    background: #2a4a38;
+    color: #e8d5a3;
+  }
+  .info-text { font-size: 11px; color: #6a8a78; margin-top: 6px; line-height: 1.5; }
+  .outs-display {
+    display: inline-block;
+    background: #1a3a2a;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 13px;
+    color: #f0c674;
+    font-weight: 700;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>♠ 德州扑克保险计算器 ♥</h1>
+
+  <!-- 选牌区 -->
+  <div class="card">
+    <div class="card-title">选牌自动算 outs</div>
+    <div class="row" style="margin-bottom:8px;">
+      <div>
+        <label>公共牌（3~5张）</label>
+        <div class="card-slots" id="boardSlots"></div>
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label>我的手牌</label>
+        <div class="card-slots" id="mySlots"></div>
+      </div>
+      <div>
+        <label>对手手牌</label>
+        <div class="card-slots" id="oppSlots"></div>
+      </div>
+    </div>
+    <div style="margin-top:10px; display:flex; gap:8px; align-items:center;">
+      <button class="btn" onclick="calcOuts()">⚡ 算 outs 并填入</button>
+      <span id="outsResult" style="font-size:13px;"></span>
+    </div>
+    <div class="info-text">翻牌后（3张公共牌）算转牌 outs；转牌后（4张公共牌）算河牌 outs。</div>
+  </div>
+
+  <!-- 底池投入 -->
+  <div class="card">
+    <div class="card-title">底池 & 投入</div>
+    <div class="row">
+      <div>
+        <label>底池大小 (¥)</label>
+        <input type="number" id="pot" value="500" min="0" oninput="update()">
+      </div>
+      <div>
+        <label>我已投入 (¥)</label>
+        <input type="number" id="invest" value="250" min="0" oninput="update()">
+      </div>
+    </div>
+  </div>
+
+  <!-- 转牌保险 -->
+  <div class="card">
+    <div class="card-title">转牌保险</div>
+    <div class="row" style="margin-bottom:8px;">
+      <div>
+        <label>转牌 outs</label>
+        <input type="number" id="turnOuts" value="9" min="1" max="45" oninput="onOutsChange('turn')">
+      </div>
+      <div>
+        <label>赔率</label>
+        <div style="padding:8px 10px; background:#0d1f17; border-radius:6px; font-size:15px; color:#f0c674; font-weight:700;" id="turnOdds">2.8×</div>
+      </div>
+      <div>
+        <label>转牌买金 (¥)</label>
+        <input type="number" id="turnPremium" value="0" min="0" oninput="update()">
+      </div>
+    </div>
+    <div class="odds-bar" id="turnOddsBar"></div>
+    <div class="info-text">买金 = 赔付 ÷ 赔率；赔付上限 = 底池。转牌爆了拿赔付不扣买金，不爆扣买金进河牌。</div>
+  </div>
+
+  <!-- 河牌保险 -->
+  <div class="card">
+    <div class="card-title">河牌保险（转牌安全后才生效）</div>
+    <div class="row" style="margin-bottom:8px;">
+      <div>
+        <label>河牌 outs</label>
+        <input type="number" id="riverOuts" value="9" min="1" max="44" oninput="onOutsChange('river')">
+      </div>
+      <div>
+        <label>赔率</label>
+        <div style="padding:8px 10px; background:#0d1f17; border-radius:6px; font-size:15px; color:#f0c674; font-weight:700;" id="riverOdds">2.8×</div>
+      </div>
+      <div>
+        <label>河牌买金 (¥)</label>
+        <input type="number" id="riverPremium" value="50" min="0" oninput="update()">
+      </div>
+    </div>
+    <div class="odds-bar" id="riverOddsBar"></div>
+    <div class="info-text">河牌 outs 可与转牌不同。只买河牌就把转牌买金设为0。</div>
+  </div>
+
+  <!-- 结果 -->
+  <div class="card">
+    <div class="card-title">结算结果</div>
+    <div class="results" id="results"></div>
+  </div>
+
+  <div class="info-text" style="text-align:center; padding:8px;">
+    爆保险 = 危险牌发出，拿赔付、不扣买金；不爆 = 赢底池、扣买金。
+  </div>
+</div>
+
+<!-- 牌选择器 -->
+<div class="picker-overlay" id="pickerOverlay">
+  <div class="picker">
+    <h3 id="pickerTitle">选择牌</h3>
+    <div class="picker-grid" id="pickerGrid"></div>
+    <button class="picker-close" onclick="closePicker()">关闭</button>
+  </div>
+</div>
+
+<script>
+// ========== 赔率表 ==========
+const ODDS_TABLE = {1:30,2:15,3:10,4:7,5:6,6:5,7:4,8:3.5,9:2.8,10:2.5,11:2.3,12:2,13:1.8,14:1.65,15:1.5,16:1.35,17:1.2};
+function getOdds(outs) {
+  if (outs <= 0) return 0;
+  if (outs >= 17) return 1.2;
+  return ODDS_TABLE[outs] || 1.2;
+}
+
+// ========== 牌相关 ==========
+const SUITS = ['♠','♥','♦','♣'];
+const SUIT_RED = {'♥':true,'♦':true,'♠':false,'♣':false};
+const RANKS = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
+const RANK_VAL = {'A':14,'2':2,'3':3,'4':4,'5':5,'6':6,'7':7,'8':8,'9':9,'10':10,'J':11,'Q':12,'K':13};
+
+let allCards = [];
+SUITS.forEach(s => RANKS.forEach(r => allCards.push(r+s)));
+
+let selected = { board: [], my: [], opp: [] };
+let pickerTarget = null;
+
+function cardStr(c) { return c; }
+function isRed(c) { return SUIT_RED[c.slice(-1)]; }
+
+// ========== 选牌UI ==========
+function renderSlots() {
+  renderSlotGroup('boardSlots', 'board', 5);
+  renderSlotGroup('mySlots', 'my', 2);
+  renderSlotGroup('oppSlots', 'opp', 2);
+}
+function renderSlotGroup(elId, key, max) {
+  const el = document.getElementById(elId);
+  el.innerHTML = '';
+  for (let i = 0; i < max; i++) {
+    const slot = document.createElement('div');
+    slot.className = 'slot';
+    if (selected[key][i]) {
+      slot.classList.add('filled');
+      if (isRed(selected[key][i])) slot.classList.add('red');
+      slot.textContent = selected[key][i];
+      const rm = document.createElement('div');
+      rm.className = 'remove';
+      rm.textContent = '×';
+      rm.onclick = (e) => { e.stopPropagation(); selected[key].splice(i,1); renderSlots(); };
+      slot.appendChild(rm);
+    } else {
+      slot.textContent = '+';
+      slot.onclick = () => openPicker(key);
+    }
+    el.appendChild(slot);
+  }
+}
+
+function openPicker(key) {
+  pickerTarget = key;
+  document.getElementById('pickerTitle').textContent =
+    key === 'board' ? '选公共牌' : key === 'my' ? '选我的手牌' : '选对手手牌';
+  const used = new Set([...selected.board, ...selected.my, ...selected.opp]);
+  const grid = document.getElementById('pickerGrid');
+  grid.innerHTML = '';
+  allCards.forEach(c => {
+    const div = document.createElement('div');
+    div.className = 'picker-card';
+    if (isRed(c)) div.classList.add('red');
+    if (used.has(c)) div.classList.add('disabled');
+    div.textContent = c;
+    if (!used.has(c)) {
+      div.onclick = () => {
+        if (selected[key].length < (key==='board'?5:2)) {
+          selected[key].push(c);
+          renderSlots();
+          closePicker();
+        }
+      };
+    }
+    grid.appendChild(div);
+  });
+  document.getElementById('pickerOverlay').classList.add('active');
+}
+function closePicker() {
+  document.getElementById('pickerOverlay').classList.remove('active');
+}
+
+// ========== 牌型评估 ==========
+function evalHand(cards) {
+  // cards: array of 5-7 strings like 'As'
+  // returns rank array for comparison (higher = better)
+  const parsed = cards.map(c => ({rank: RANK_VAL[c.slice(0,-1)], suit: c.slice(-1)}));
+  // 生成所有5张组合，取最佳
+  let best = [0];
+  const combos = getCombos(parsed, 5);
+  for (const combo of combos) {
+    const r = eval5(combo);
+    if (compareRanks(r, best) > 0) best = r;
+  }
+  return best;
+}
+function getCombos(arr, k) {
+  const res = [];
+  function helper(start, curr) {
+    if (curr.length === k) { res.push([...curr]); return; }
+    for (let i = start; i < arr.length; i++) {
+      curr.push(arr[i]);
+      helper(i+1, curr);
+      curr.pop();
+    }
+  }
+  helper(0, []);
+  return res;
+}
+function eval5(cards) {
+  const ranks = cards.map(c => c.rank).sort((a,b) => b-a);
+  const suits = cards.map(c => c.suit);
+  const isFlush = suits.every(s => s === suits[0]);
+  // 顺子检测（含A2345）
+  const uniqueRanks = [...new Set(ranks)].sort((a,b) => b-a);
+  let isStraight = false, straightHigh = 0;
+  if (uniqueRanks.length === 5) {
+    if (uniqueRanks[0] - uniqueRanks[4] === 4) { isStraight = true; straightHigh = uniqueRanks[0]; }
+    if (uniqueRanks.join(',') === '14,5,4,3,2') { isStraight = true; straightHigh = 5; }
+  }
+  // 计数
+  const count = {};
+  ranks.forEach(r => count[r] = (count[r]||0)+1);
+  const counts = Object.entries(count).map(([r,c]) => ({rank:+r, count:c})).sort((a,b) => b.count-a.count || b.rank-a.rank);
+
+  if (isFlush && isStraight) return [8, straightHigh];
+  if (counts[0].count === 4) return [7, counts[0].rank, counts[1].rank];
+  if (counts[0].count === 3 && counts[1].count === 2) return [6, counts[0].rank, counts[1].rank];
+  if (isFlush) return [5, ...ranks];
+  if (isStraight) return [4, straightHigh];
+  if (counts[0].count === 3) return [3, counts[0].rank, ...counts.slice(1).map(c=>c.rank)];
+  if (counts[0].count === 2 && counts[1].count === 2) return [2, counts[0].rank, counts[1].rank, counts[2].rank];
+  if (counts[0].count === 2) return [1, counts[0].rank, ...counts.slice(1).map(c=>c.rank)];
+  return [0, ...ranks];
+}
+function compareRanks(a, b) {
+  for (let i = 0; i < Math.max(a.length, b.length); i++) {
+    const va = a[i] || 0, vb = b[i] || 0;
+    if (va !== vb) return va - vb;
+  }
+  return 0;
+}
+
+// ========== 算outs ==========
+function calcOuts() {
+  if (selected.my.length < 2 || selected.opp.length < 2 || selected.board.length < 3) {
+    document.getElementById('outsResult').innerHTML = '<span style="color:#e74c3c;">请先选齐我的手牌、对手手牌和至少3张公共牌</span>';
+    return;
+  }
+  const known = new Set([...selected.board, ...selected.my, ...selected.opp]);
+  const remaining = allCards.filter(c => !known.has(c));
+
+  if (selected.board.length === 3) {
+    // 算转牌outs：发一张转牌后，6张牌比大小
+    let outs = 0;
+    for (const turn of remaining) {
+      const myBest = evalHand([...selected.my, ...selected.board, turn]);
+      const oppBest = evalHand([...selected.opp, ...selected.board, turn]);
+      if (compareRanks(oppBest, myBest) > 0) outs++;
+    }
+    document.getElementById('turnOuts').value = outs;
+    onOutsChange('turn');
+    document.getElementById('outsResult').innerHTML = `转牌 outs = <span class="outs-display">${outs}</span> 张（剩余${remaining.length}张未知）`;
+  } else if (selected.board.length >= 4) {
+    // 算河牌outs：4张公共牌，再发一张河牌
+    const board4 = selected.board.slice(0, 4);
+    const known4 = new Set([...board4, ...selected.my, ...selected.opp]);
+    const remaining4 = allCards.filter(c => !known4.has(c));
+    let outs = 0;
+    for (const river of remaining4) {
+      const myBest = evalHand([...selected.my, ...board4, river]);
+      const oppBest = evalHand([...selected.opp, ...board4, river]);
+      if (compareRanks(oppBest, myBest) > 0) outs++;
+    }
+    document.getElementById('riverOuts').value = outs;
+    onOutsChange('river');
+    document.getElementById('outsResult').innerHTML = `河牌 outs = <span class="outs-display">${outs}</span> 张（剩余${remaining4.length}张未知）`;
+  }
+  update();
+}
+
+// ========== 赔率条 ==========
+function renderOddsBar(elId, activeOuts, prefix) {
+  const el = document.getElementById(elId);
+  el.innerHTML = '';
+  for (let outs = 1; outs <= 17; outs++) {
+    const cell = document.createElement('div');
+    cell.className = 'odds-cell' + (outs === activeOuts ? ' active' : '');
+    cell.innerHTML = `<div class="mult">${getOdds(outs)}</div><div class="outs">${outs}</div>`;
+    cell.onclick = () => {
+      document.getElementById(prefix+'Outs').value = outs;
+      onOutsChange(prefix);
+    };
+    el.appendChild(cell);
+  }
+}
+
+function onOutsChange(prefix) {
+  const outs = parseInt(document.getElementById(prefix+'Outs').value) || 1;
+  document.getElementById(prefix+'Odds').textContent = getOdds(outs) + '×';
+  renderOddsBar(prefix+'OddsBar', Math.min(outs,17), prefix);
+  update();
+}
+
+// ========== 保险计算 ==========
+function update() {
+  const pot = parseFloat(document.getElementById('pot').value) || 0;
+  const invest = parseFloat(document.getElementById('invest').value) || 0;
+  const turnOuts = parseInt(document.getElementById('turnOuts').value) || 1;
+  const riverOuts = parseInt(document.getElementById('riverOuts').value) || 1;
+  const turnPremium = parseFloat(document.getElementById('turnPremium').value) || 0;
+  const riverPremium = parseFloat(document.getElementById('riverPremium').value) || 0;
+
+  const turnOdds = getOdds(turnOuts);
+  const riverOdds = getOdds(riverOuts);
+  // 赔付 = 买金 × 赔率，上限底池
+  const turnPayout = Math.min(turnPremium * turnOdds, pot);
+  const riverPayout = Math.min(riverPremium * riverOdds, pot);
+
+  const results = document.getElementById('results');
+  results.innerHTML = '';
+
+  // 情况1：转牌爆
+  // 转牌爆了 → 拿转牌赔付，不扣转牌买金；河牌保险未触发不扣
+  const r1Recv = turnPayout;
+  const r1Profit = r1Recv - invest;
+  addResult('转牌爆（终局）', r1Recv, r1Profit, 'hit',
+    turnPremium > 0 ? `转牌赔付 ¥${turnPayout.toFixed(0)}` : '未买转牌保险，输掉底池');
+
+  // 情况2：转牌安全，河牌爆
+  // 转牌不爆 → 扣转牌买金；河牌爆 → 拿河牌赔付，不扣河牌买金
+  const r2Recv = riverPayout;
+  const r2Cost = turnPremium; // 转牌买金扣了
+  const r2Profit = r2Recv - invest - r2Cost;
+  addResult('转安全 · 河牌爆', r2Recv, r2Profit, 'hit',
+    `扣转牌买金 ¥${turnPremium.toFixed(0)}，河牌赔付 ¥${riverPayout.toFixed(0)}`);
+
+  // 情况3：双安全
+  // 都不爆 → 赢底池，扣转牌买金 + 河牌买金
+  const r3Recv = pot - turnPremium - riverPremium;
+  const r3Profit = r3Recv - invest;
+  addResult('转河双安全（赢池）', r3Recv, r3Profit, 'safe',
+    `底池 ¥${pot.toFixed(0)} − 转牌买金 ¥${turnPremium.toFixed(0)} − 河牌买金 ¥${riverPremium.toFixed(0)}`);
+}
+
+function addResult(label, receive, profit, cls, detail) {
+  const div = document.createElement('div');
+  div.className = 'result-item ' + cls;
+  const profitCls = profit >= 0 ? 'profit-pos' : 'profit-neg';
+  const profitSign = profit >= 0 ? '+' : '';
+  div.innerHTML = `
+    <div class="result-label">${label}</div>
+    <div class="result-values">
+      <span>实收 <span class="val">¥${receive.toFixed(0)}</span></span>
+      <span>净盈亏 <span class="val ${profitCls}">${profitSign}${profit.toFixed(0)}</span></span>
+    </div>
+    <div class="info-text">${detail}</div>
+  `;
+  document.getElementById('results').appendChild(div);
+}
+
+// ========== 初始化 ==========
+renderSlots();
+renderOddsBar('turnOddsBar', 9, 'turn');
+renderOddsBar('riverOddsBar', 9, 'river');
+update();
+</script>
+</body>
+</html>
