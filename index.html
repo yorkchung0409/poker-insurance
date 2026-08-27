@@ -253,45 +253,64 @@
     background: rgba(0,0,0,0.8);
     z-index: 9999;
     align-items: center; justify-content: center;
-    padding: 20px;
+    padding: 16px;
   }
   .picker-overlay.active { display: flex; }
   .picker {
     background: #13301f;
     border: 1px solid #1e4a32;
     border-radius: 16px;
-    padding: 20px;
-    max-width: 440px;
+    padding: 18px;
     width: 100%;
+    max-width: 420px;
     max-height: 90vh;
     overflow-y: auto;
   }
-  .picker h3 { color: #f0c674; font-size: 17px; margin-bottom: 14px; text-align: center; }
+  .picker h3 { color: #f0c674; font-size: 16px; margin-bottom: 14px; text-align: center; }
   .picker-grid {
     display: grid;
-    grid-template-columns: repeat(13, 1fr);
-    gap: 5px;
+    grid-template-columns: repeat(13, minmax(0, 1fr));
+    gap: 3px;
   }
   .picker-card {
     aspect-ratio: 2/3;
     background: #fff;
     color: #000;
-    border-radius: 6px;
+    border-radius: 4px;
     display: flex; align-items: center; justify-content: center;
-    font-size: 13px; font-weight: 700;
+    font-size: 11px; font-weight: 700;
     cursor: pointer;
-    border: 1px solid #ccc;
+    border: 1.5px solid #ccc;
     user-select: none;
+    min-width: 0;
+    overflow: hidden;
+    padding: 0;
   }
   .picker-card.red { color: #c0392b; }
-  .picker-card.disabled { opacity: 0.15; cursor: not-allowed; }
-  .picker-close {
-    display: block; margin: 16px auto 0;
-    background: #1e4a32; color: #e8d5a3;
-    border: none; padding: 12px 40px;
-    border-radius: 24px; cursor: pointer;
-    font-size: 15px; font-weight: 600;
+  .picker-card.selected {
+    border-color: #f0c674;
+    background: #fff8e0;
+    box-shadow: 0 0 0 1px #f0c674;
   }
+  .picker-card.disabled { opacity: 0.15; cursor: not-allowed; }
+  .picker-footer {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 16px;
+  }
+  .picker-count { font-size: 13px; color: #8fb89a; }
+  .picker-done {
+    background: #1e4a32; color: #5a7a68;
+    border: none; padding: 10px 36px;
+    border-radius: 24px; cursor: not-allowed;
+    font-size: 15px; font-weight: 600;
+    transition: all 0.2s;
+  }
+  .picker-done.ready {
+    background: linear-gradient(180deg, #f0c674 0%, #d4a84a 100%);
+    color: #0a1f15;
+    cursor: pointer;
+  }
+  .picker-done.ready:active { opacity: 0.85; }
 </style>
 </head>
 <body>
@@ -451,7 +470,10 @@
   <div class="picker">
     <h3 id="pickerTitle">选择牌</h3>
     <div class="picker-grid" id="pickerGrid"></div>
-    <button class="picker-close" onclick="closePicker()">关闭</button>
+    <div class="picker-footer">
+      <span class="picker-count" id="pickerCount">已选 0 张</span>
+      <button class="picker-done" id="pickerDone" onclick="confirmPicker()">完成</button>
+    </div>
   </div>
 </div>
 
@@ -475,6 +497,7 @@ SUITS.forEach(s => RANKS.forEach(r => allCards.push(r+s)));
 
 let selected = { board: [], my: [], opp: [] };
 let pickerTarget = null;
+let pickerTemp = [];
 
 function isRed(c) { return SUIT_RED[c.slice(-1)]; }
 
@@ -509,31 +532,72 @@ function renderSlotGroup(elId, key, max) {
 
 function openPicker(key) {
   pickerTarget = key;
+  pickerTemp = [...selected[key]];
+  renderPicker();
+  document.getElementById('pickerOverlay').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function renderPicker() {
+  const max = pickerTarget === 'board' ? 5 : 2;
+  const min = pickerTarget === 'board' ? 3 : 2;
+
   document.getElementById('pickerTitle').textContent =
-    key === 'board' ? '选公共牌' : key === 'my' ? '选我的手牌' : '选对手手牌';
-  const used = new Set([...selected.board, ...selected.my, ...selected.opp]);
+    pickerTarget === 'board' ? '选公共牌（至少3张，最多5张）' :
+    pickerTarget === 'my' ? '选我的手牌（2张）' : '选对手手牌（2张）';
+
+  // 其他区域已选的牌（不可选）
+  const otherUsed = new Set();
+  ['board','my','opp'].forEach(k => {
+    if (k !== pickerTarget) selected[k].forEach(c => otherUsed.add(c));
+  });
+
   const grid = document.getElementById('pickerGrid');
   grid.innerHTML = '';
   allCards.forEach(c => {
     const div = document.createElement('div');
     div.className = 'picker-card';
     if (isRed(c)) div.classList.add('red');
-    if (used.has(c)) div.classList.add('disabled');
-    div.textContent = c;
-    if (!used.has(c)) {
+
+    if (pickerTemp.includes(c)) {
+      // 已选中：高亮，点击取消
+      div.classList.add('selected');
       div.onclick = () => {
-        if (selected[key].length < (key==='board'?5:2)) {
-          selected[key].push(c);
-          renderSlots();
-          closePicker();
-        }
+        pickerTemp = pickerTemp.filter(x => x !== c);
+        renderPicker();
+      };
+    } else if (otherUsed.has(c) || pickerTemp.length >= max) {
+      // 其他区域已选或已选满：禁用
+      div.classList.add('disabled');
+    } else {
+      // 可选
+      div.onclick = () => {
+        pickerTemp.push(c);
+        renderPicker();
       };
     }
+    div.textContent = c;
     grid.appendChild(div);
   });
-  document.getElementById('pickerOverlay').classList.add('active');
-  document.body.style.overflow = 'hidden';
+
+  // 更新底部状态
+  document.getElementById('pickerCount').textContent = `已选 ${pickerTemp.length}/${max} 张`;
+  const doneBtn = document.getElementById('pickerDone');
+  if (pickerTemp.length >= min) {
+    doneBtn.classList.add('ready');
+  } else {
+    doneBtn.classList.remove('ready');
+  }
 }
+
+function confirmPicker() {
+  const min = pickerTarget === 'board' ? 3 : 2;
+  if (pickerTemp.length < min) return;
+  selected[pickerTarget] = [...pickerTemp];
+  renderSlots();
+  closePicker();
+}
+
 function closePicker() {
   document.getElementById('pickerOverlay').classList.remove('active');
   document.body.style.overflow = '';
