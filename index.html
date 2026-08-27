@@ -1467,7 +1467,7 @@ function getFilteredRecords() {
     if (tag && !(r.tags || []).includes(tag)) return false;
     if (blind && r.blind !== blind) return false;
     return true;
-  }).sort((a, b) => b.date.localeCompare(a.date) || b.id - a.id);
+  }).sort((a, b) => b.date.localeCompare(a.date) || String(b.id).localeCompare(String(a.id)));
 }
 
 function getListVisibleRecords(records) {
@@ -1492,7 +1492,7 @@ function formatAmountText(v) {
 function getPeakRecords(records, type, n = 5) {
   return [...records]
     .filter(r => type === 'win' ? r.result === 'win' : r.result === 'lose')
-    .sort((a, b) => (type === 'win' ? b.amount - a.amount : b.amount - a.amount) || b.date.localeCompare(a.date) || b.id - a.id)
+    .sort((a, b) => (type === 'win' ? b.amount - a.amount : b.amount - a.amount) || b.date.localeCompare(a.date) || String(b.id).localeCompare(String(a.id)))
     .slice(0, n);
 }
 
