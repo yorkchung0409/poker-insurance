@@ -339,6 +339,212 @@
     cursor: pointer;
   }
   .picker-done.ready:active { opacity: 0.85; }
+
+  /* ========== Tab栏 ========== */
+  .tabs {
+    display: flex;
+    background: #0f2a1c;
+    border: 1px solid #1e4a32;
+    border-radius: 10px;
+    padding: 3px;
+    margin-bottom: 10px;
+  }
+  .tab {
+    flex: 1;
+    padding: 9px 0;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    color: #8fb89a;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .tab.active {
+    background: linear-gradient(180deg, #f0c674 0%, #d4a84a 100%);
+    color: #0a1f15;
+  }
+
+  /* ========== 统计总览 ========== */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .stat-item {
+    background: #0a1f15;
+    border-radius: 10px;
+    padding: 12px;
+    text-align: center;
+  }
+  .stat-label { font-size: 11px; color: #5a7a68; display: block; margin-bottom: 4px; }
+  .stat-value { font-size: 20px; font-weight: 800; color: #f0c674; }
+  .stat-value.positive { color: #27ae60; }
+  .stat-value.negative { color: #e74c3c; }
+
+  /* ========== 筛选栏 ========== */
+  .filter-bar {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+  .filter-bar select {
+    flex: 1;
+    background: #0f2a1c;
+    border: 1px solid #1e4a32;
+    border-radius: 8px;
+    color: #e8d5a3;
+    padding: 8px;
+    font-size: 12px;
+    outline: none;
+    appearance: none;
+    text-align: center;
+    cursor: pointer;
+  }
+
+  /* ========== 记录列表 ========== */
+  .record-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #1a3a2a;
+  }
+  .record-item:last-child { border-bottom: none; }
+  .record-date { font-size: 12px; color: #5a7a68; width: 78px; flex-shrink: 0; }
+  .record-info { flex: 1; min-width: 0; }
+  .record-blinds { font-size: 13px; color: #e8d5a3; font-weight: 600; }
+  .record-meta { font-size: 11px; color: #5a7a68; margin-top: 2px; }
+  .record-amount { font-size: 17px; font-weight: 800; flex-shrink: 0; margin-left: 8px; }
+  .record-amount.win { color: #27ae60; }
+  .record-amount.lose { color: #e74c3c; }
+  .record-del {
+    background: none; border: none; color: #5a7a68;
+    font-size: 16px; cursor: pointer; padding: 4px 8px;
+    flex-shrink: 0;
+  }
+  .empty-state { text-align: center; padding: 30px 0; color: #3a5a48; font-size: 13px; }
+
+  /* ========== 数据管理 ========== */
+  .data-mgmt { display: flex; gap: 8px; }
+  .btn-mgmt {
+    flex: 1;
+    background: #0a1f15;
+    border: 1px solid #1e4a32;
+    border-radius: 8px;
+    color: #8fb89a;
+    padding: 9px 0;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .btn-mgmt:active { border-color: #f0c674; color: #f0c674; }
+  .btn-mgmt.danger:active { border-color: #e74c3c; color: #e74c3c; }
+
+  /* ========== 通用弹窗 ========== */
+  .modal-overlay {
+    display: none;
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.8);
+    z-index: 9999;
+    align-items: flex-end; justify-content: center;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal {
+    position: relative;
+    background: #13301f;
+    border: 1px solid #1e4a32;
+    border-radius: 16px 16px 0 0;
+    padding: 20px 18px 24px;
+    width: 100%;
+    max-width: 480px;
+    max-height: 85vh;
+    overflow-y: auto;
+  }
+  .modal-sm { border-radius: 16px; margin: auto; max-width: 380px; }
+  .modal h3 { color: #f0c674; font-size: 17px; margin-bottom: 16px; text-align: center; }
+
+  /* 赢/输切换 */
+  .win-lose-toggle {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .wl-btn {
+    flex: 1;
+    padding: 12px 0;
+    border-radius: 10px;
+    border: 2px solid #1e4a32;
+    background: #0a1f15;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .wl-btn.win { color: #5a7a68; }
+  .wl-btn.lose { color: #5a7a68; }
+  .wl-btn.win.active { background: #1a3a2a; border-color: #27ae60; color: #27ae60; }
+  .wl-btn.lose.active { background: #3a1a1a; border-color: #e74c3c; color: #e74c3c; }
+
+  /* 盲注/标签选择 */
+  .blind-select, .tag-select {
+    display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px;
+  }
+  .option-chip {
+    padding: 6px 14px;
+    background: #0a1f15;
+    border: 1px solid #1e4a32;
+    border-radius: 16px;
+    color: #8fb89a;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .option-chip.active {
+    background: #1a3a2a;
+    border-color: #f0c674;
+    color: #f0c674;
+  }
+  .btn-add-option {
+    background: none;
+    border: 1px dashed #2a5a3e;
+    border-radius: 16px;
+    color: #5a7a68;
+    padding: 5px 12px;
+    font-size: 11px;
+    cursor: pointer;
+  }
+
+  /* 盲注管理列表 */
+  .option-list { margin-top: 14px; }
+  .option-list-item {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 8px 12px;
+    background: #0a1f15;
+    border-radius: 8px;
+    margin-bottom: 6px;
+  }
+  .option-list-item span { font-size: 14px; color: #e8d5a3; font-weight: 600; }
+  .option-list-item button {
+    background: none; border: none; color: #e74c3c;
+    font-size: 16px; cursor: pointer; padding: 4px 8px;
+  }
+
+  /* date input样式 */
+  input[type="date"] {
+    width: 100%;
+    background: #0a1f15;
+    border: 1px solid #1e4a32;
+    border-radius: 10px;
+    color: #f0c674;
+    padding: 12px 14px;
+    font-size: 15px;
+    font-weight: 600;
+    outline: none;
+  }
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.7) sepia(1) saturate(3) hue-rotate(10deg);
+  }
 </style>
 </head>
 <body>
@@ -350,6 +556,15 @@
       <button class="reset-btn" onclick="resetAll()">↺ 重置</button>
     </div>
   </div>
+
+  <!-- Tab栏 -->
+  <div class="tabs">
+    <button class="tab active" id="tabInsurance" onclick="switchTab('insurance')">保险计算</button>
+    <button class="tab" id="tabBookkeeping" onclick="switchTab('bookkeeping')">打牌记账</button>
+  </div>
+
+  <!-- ========== 保险计算页面 ========== -->
+  <div id="insurancePage">
 
   <!-- 底池 & 投入 -->
   <div class="card">
@@ -494,6 +709,60 @@
   <div class="info-text" style="text-align:center; padding:6px 0 12px;">
     爆保险 = 危险牌发出，拿赔付、不扣买金；不爆 = 赢底池、扣买金。
   </div>
+  </div><!-- /insurancePage -->
+
+  <!-- ========== 打牌记账页面 ========== -->
+  <div id="bookkeepingPage" style="display:none;">
+
+    <!-- 统计总览 -->
+    <div class="card">
+      <div class="stats-grid">
+        <div class="stat-item">
+          <span class="stat-label">总场次</span>
+          <span class="stat-value" id="statSessions">0</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">总时长</span>
+          <span class="stat-value" id="statHours">0h</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">总盈亏</span>
+          <span class="stat-value" id="statProfit">0</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">时薪</span>
+          <span class="stat-value" id="statHourly">0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 操作按钮 -->
+    <button class="btn" onclick="openRecordForm()">+ 记一笔</button>
+
+    <!-- 筛选栏 -->
+    <div class="filter-bar">
+      <select id="filterMonth" onchange="renderRecords()"></select>
+      <select id="filterTag" onchange="renderRecords()"><option value="">全部标签</option></select>
+      <select id="filterBlind" onchange="renderRecords()"><option value="">全部盲注</option></select>
+    </div>
+
+    <!-- 记录列表 -->
+    <div class="card">
+      <div class="card-title"><span>记录明细</span><span class="hint" id="recordCount">0 条</span></div>
+      <div id="recordList"></div>
+    </div>
+
+    <!-- 数据管理 -->
+    <div class="card">
+      <div class="card-title">数据管理</div>
+      <div class="data-mgmt">
+        <button class="btn-mgmt" onclick="exportData()">导出数据</button>
+        <button class="btn-mgmt" onclick="document.getElementById('importFile').click()">导入数据</button>
+        <button class="btn-mgmt danger" onclick="clearAllData()">清空数据</button>
+      </div>
+      <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+    </div>
+  </div><!-- /bookkeepingPage -->
 </div>
 
 <!-- 牌选择器 -->
@@ -506,6 +775,79 @@
       <span class="picker-count" id="pickerCount">已选 0 张</span>
       <button class="picker-done" id="pickerDone" onclick="confirmPicker()">完成</button>
     </div>
+  </div>
+</div>
+
+<!-- 记账表单弹窗 -->
+<div class="modal-overlay" id="recordOverlay">
+  <div class="modal">
+    <button class="picker-x" onclick="closeRecordForm()">×</button>
+    <h3 id="recordFormTitle">记一笔</h3>
+
+    <!-- 赢/输切换 -->
+    <div class="win-lose-toggle">
+      <button class="wl-btn win active" id="btnWin" onclick="setResult('win')">赢</button>
+      <button class="wl-btn lose" id="btnLose" onclick="setResult('lose')">输</button>
+    </div>
+
+    <div class="field">
+      <label>金额 (¥)</label>
+      <div class="input-wrap">
+        <input type="number" id="recAmount" placeholder="0" min="0">
+        <span class="unit">¥</span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>时长（小时）</label>
+      <div class="input-wrap">
+        <input type="number" id="recDuration" placeholder="例如 1.5" min="0" step="0.25">
+        <span class="unit">h</span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>盲注级别</label>
+      <div class="blind-select" id="blindSelect"></div>
+      <button class="btn-add-option" onclick="openBlindManager()">+ 管理盲注</button>
+    </div>
+
+    <div class="field">
+      <label>标签</label>
+      <div class="tag-select" id="tagSelect"></div>
+    </div>
+
+    <div class="field">
+      <label>日期</label>
+      <div class="input-wrap">
+        <input type="date" id="recDate">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>备注</label>
+      <div class="input-wrap">
+        <input type="text" id="recNote" placeholder="选填，50字以内" maxlength="50">
+      </div>
+    </div>
+
+    <button class="btn" id="saveRecordBtn" onclick="saveRecord()">保存</button>
+  </div>
+</div>
+
+<!-- 盲注管理弹窗 -->
+<div class="modal-overlay" id="blindOverlay">
+  <div class="modal modal-sm">
+    <button class="picker-x" onclick="closeBlindManager()">×</button>
+    <h3>管理盲注级别</h3>
+    <div class="field">
+      <label>添加盲注（如 1/2、0.5/1、5/10）</label>
+      <div class="input-wrap">
+        <input type="text" id="newBlind" placeholder="例如 1/2">
+      </div>
+    </div>
+    <button class="btn" onclick="addBlind()">添加</button>
+    <div class="option-list" id="blindList"></div>
   </div>
 </div>
 
@@ -838,6 +1180,324 @@ function resetAll() {
   onOutsChange('turn', 9);
   onOutsChange('river', 9);
   update();
+}
+
+// ========== Tab切换 ==========
+function switchTab(tab) {
+  document.getElementById('insurancePage').style.display = tab === 'insurance' ? 'block' : 'none';
+  document.getElementById('bookkeepingPage').style.display = tab === 'bookkeeping' ? 'block' : 'none';
+  document.getElementById('tabInsurance').classList.toggle('active', tab === 'insurance');
+  document.getElementById('tabBookkeeping').classList.toggle('active', tab === 'bookkeeping');
+  if (tab === 'bookkeeping') {
+    renderAll();
+  }
+}
+
+// ========== 记账数据 ==========
+const BOOK_KEY = 'poker_bookkeeping';
+let bookData = loadBookData();
+let editingId = null;
+let currentResult = 'win';
+let selectedBlind = '';
+let selectedTags = [];
+
+function loadBookData() {
+  try {
+    const d = JSON.parse(localStorage.getItem(BOOK_KEY));
+    if (d && d.records) return d;
+  } catch(e) {}
+  return {
+    records: [],
+    blinds: ['1/2', '0.5/1', '1/3', '2/5', '5/10'],
+    tags: ['线上', '线下']
+  };
+}
+function saveBookData() {
+  localStorage.setItem(BOOK_KEY, JSON.stringify(bookData));
+}
+
+// ========== 统计 ==========
+function calcStats(records) {
+  let sessions = records.length;
+  let hours = 0, profit = 0;
+  records.forEach(r => {
+    hours += r.duration || 0;
+    profit += r.result === 'win' ? r.amount : -r.amount;
+  });
+  hours = Math.round(hours * 100) / 100;
+  const hourly = hours > 0 ? Math.round(profit / hours * 100) / 100 : 0;
+  return { sessions, hours, profit, hourly };
+}
+
+function renderStats(records) {
+  const s = calcStats(records);
+  document.getElementById('statSessions').textContent = s.sessions;
+  document.getElementById('statHours').textContent = s.hours + 'h';
+  const profitEl = document.getElementById('statProfit');
+  profitEl.textContent = (s.profit >= 0 ? '+' : '') + s.profit;
+  profitEl.className = 'stat-value ' + (s.profit >= 0 ? 'positive' : 'negative');
+  const hourlyEl = document.getElementById('statHourly');
+  hourlyEl.textContent = (s.hourly >= 0 ? '+' : '') + s.hourly;
+  hourlyEl.className = 'stat-value ' + (s.hourly >= 0 ? 'positive' : 'negative');
+}
+
+// ========== 筛选器 ==========
+function renderFilters() {
+  // 月份
+  const monthSel = document.getElementById('filterMonth');
+  const months = [...new Set(bookData.records.map(r => r.date.substring(0, 7)))].sort().reverse();
+  const curMonth = monthSel.value;
+  monthSel.innerHTML = '<option value="">全部月份</option>' +
+    months.map(m => `<option value="${m}">${m}</option>`).join('');
+  if (months.includes(curMonth)) monthSel.value = curMonth;
+
+  // 标签
+  const tagSel = document.getElementById('filterTag');
+  const curTag = tagSel.value;
+  tagSel.innerHTML = '<option value="">全部标签</option>' +
+    bookData.tags.map(t => `<option value="${t}">${t}</option>`).join('');
+  if (bookData.tags.includes(curTag)) tagSel.value = curTag;
+
+  // 盲注
+  const blindSel = document.getElementById('filterBlind');
+  const curBlind = blindSel.value;
+  blindSel.innerHTML = '<option value="">全部盲注</option>' +
+    bookData.blinds.map(b => `<option value="${b}">${b}</option>`).join('');
+  if (bookData.blinds.includes(curBlind)) blindSel.value = curBlind;
+}
+
+function getFilteredRecords() {
+  const month = document.getElementById('filterMonth').value;
+  const tag = document.getElementById('filterTag').value;
+  const blind = document.getElementById('filterBlind').value;
+  return bookData.records.filter(r => {
+    if (month && !r.date.startsWith(month)) return false;
+    if (tag && !(r.tags || []).includes(tag)) return false;
+    if (blind && r.blind !== blind) return false;
+    return true;
+  }).sort((a, b) => b.date.localeCompare(a.date) || b.id - a.id);
+}
+
+// ========== 记录列表 ==========
+function renderRecords() {
+  const records = getFilteredRecords();
+  const listEl = document.getElementById('recordList');
+  document.getElementById('recordCount').textContent = records.length + ' 条';
+
+  if (records.length === 0) {
+    listEl.innerHTML = '<div class="empty-state">暂无记录，点上方"记一笔"开始</div>';
+    renderStats(bookData.records);
+    return;
+  }
+
+  listEl.innerHTML = records.map(r => {
+    const profit = r.result === 'win' ? r.amount : -r.amount;
+    const cls = r.result === 'win' ? 'win' : 'lose';
+    const sign = r.result === 'win' ? '+' : '-';
+    const meta = [r.blind, r.duration + 'h', (r.tags || []).join(' '), r.note].filter(Boolean).join(' · ');
+    return `<div class="record-item">
+      <span class="record-date">${r.date.substring(5)}</span>
+      <div class="record-info">
+        <div class="record-blinds">${meta}</div>
+      </div>
+      <span class="record-amount ${cls}">${sign}${r.amount}</span>
+      <button class="record-del" onclick="deleteRecord(${r.id})">×</button>
+    </div>`;
+  }).join('');
+
+  renderStats(records);
+}
+
+function deleteRecord(id) {
+  if (!confirm('确定删除这条记录？')) return;
+  bookData.records = bookData.records.filter(r => r.id !== id);
+  saveBookData();
+  renderAll();
+}
+
+function renderAll() {
+  renderFilters();
+  renderRecords();
+}
+
+// ========== 添加/编辑记录表单 ==========
+function openRecordForm(id) {
+  editingId = id || null;
+  currentResult = 'win';
+  selectedBlind = bookData.blinds[0] || '';
+  selectedTags = [];
+
+  if (id) {
+    const r = bookData.records.find(x => x.id === id);
+    if (r) {
+      currentResult = r.result;
+      selectedBlind = r.blind;
+      selectedTags = [...(r.tags || [])];
+      document.getElementById('recAmount').value = r.amount;
+      document.getElementById('recDuration').value = r.duration;
+      document.getElementById('recDate').value = r.date;
+      document.getElementById('recNote').value = r.note || '';
+      document.getElementById('recordFormTitle').textContent = '编辑记录';
+    }
+  } else {
+    document.getElementById('recAmount').value = '';
+    document.getElementById('recDuration').value = '';
+    document.getElementById('recDate').value = new Date().toISOString().substring(0, 10);
+    document.getElementById('recNote').value = '';
+    document.getElementById('recordFormTitle').textContent = '记一笔';
+  }
+
+  setResult(currentResult);
+  renderBlindSelect();
+  renderTagSelect();
+  document.getElementById('recordOverlay').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeRecordForm() {
+  document.getElementById('recordOverlay').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+function setResult(r) {
+  currentResult = r;
+  document.getElementById('btnWin').classList.toggle('active', r === 'win');
+  document.getElementById('btnLose').classList.toggle('active', r === 'lose');
+}
+
+function renderBlindSelect() {
+  const el = document.getElementById('blindSelect');
+  el.innerHTML = bookData.blinds.map(b =>
+    `<span class="option-chip ${b === selectedBlind ? 'active' : ''}" onclick="selectBlind('${b}')">${b}</span>`
+  ).join('');
+}
+
+function selectBlind(b) {
+  selectedBlind = b;
+  renderBlindSelect();
+}
+
+function renderTagSelect() {
+  const el = document.getElementById('tagSelect');
+  el.innerHTML = bookData.tags.map(t =>
+    `<span class="option-chip ${selectedTags.includes(t) ? 'active' : ''}" onclick="toggleTag('${t}')">${t}</span>`
+  ).join('');
+}
+
+function toggleTag(t) {
+  if (selectedTags.includes(t)) {
+    selectedTags = selectedTags.filter(x => x !== t);
+  } else {
+    selectedTags.push(t);
+  }
+  renderTagSelect();
+}
+
+function saveRecord() {
+  const amount = parseFloat(document.getElementById('recAmount').value);
+  const duration = parseFloat(document.getElementById('recDuration').value) || 0;
+  const date = document.getElementById('recDate').value;
+  const note = document.getElementById('recNote').value.trim();
+
+  if (!amount || amount <= 0) { alert('请输入金额'); return; }
+  if (!date) { alert('请选择日期'); return; }
+  if (!selectedBlind) { alert('请选择盲注级别'); return; }
+
+  const record = {
+    id: editingId || Date.now(),
+    date, result: currentResult, amount, duration,
+    blind: selectedBlind, tags: [...selectedTags], note
+  };
+
+  if (editingId) {
+    const idx = bookData.records.findIndex(r => r.id === editingId);
+    if (idx >= 0) bookData.records[idx] = record;
+  } else {
+    bookData.records.push(record);
+  }
+
+  saveBookData();
+  closeRecordForm();
+  renderAll();
+}
+
+// ========== 盲注管理 ==========
+function openBlindManager() {
+  renderBlindList();
+  document.getElementById('blindOverlay').classList.add('active');
+}
+function closeBlindManager() {
+  document.getElementById('blindOverlay').classList.remove('active');
+  document.getElementById('newBlind').value = '';
+}
+function renderBlindList() {
+  const el = document.getElementById('blindList');
+  el.innerHTML = bookData.blinds.map(b =>
+    `<div class="option-list-item"><span>${b}</span><button onclick="removeBlind('${b}')">×</button></div>`
+  ).join('');
+}
+function addBlind() {
+  const input = document.getElementById('newBlind');
+  const val = input.value.trim();
+  if (!val) return;
+  if (bookData.blinds.includes(val)) { alert('该盲注已存在'); return; }
+  bookData.blinds.push(val);
+  saveBookData();
+  input.value = '';
+  renderBlindList();
+  renderBlindSelect();
+}
+function removeBlind(b) {
+  bookData.blinds = bookData.blinds.filter(x => x !== b);
+  if (selectedBlind === b) selectedBlind = bookData.blinds[0] || '';
+  saveBookData();
+  renderBlindList();
+  renderBlindSelect();
+}
+
+// ========== 数据导出/导入/清空 ==========
+function exportData() {
+  const blob = new Blob([JSON.stringify(bookData, null, 2)], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'poker-bookkeeping-' + new Date().toISOString().substring(0,10) + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const d = JSON.parse(e.target.result);
+      if (!d.records) throw new Error('格式错误');
+      if (confirm('导入将合并到现有数据，确定继续？')) {
+        // 合并记录，按id去重
+        const existingIds = new Set(bookData.records.map(r => r.id));
+        d.records.forEach(r => { if (!existingIds.has(r.id)) bookData.records.push(r); });
+        if (d.blinds) d.blinds.forEach(b => { if (!bookData.blinds.includes(b)) bookData.blinds.push(b); });
+        if (d.tags) d.tags.forEach(t => { if (!bookData.tags.includes(t)) bookData.tags.push(t); });
+        saveBookData();
+        renderAll();
+        alert('导入成功');
+      }
+    } catch(err) {
+      alert('文件格式错误');
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+function clearAllData() {
+  if (!confirm('确定清空所有记账数据？此操作不可恢复！')) return;
+  if (!confirm('再次确认：真的要删除全部记录吗？')) return;
+  bookData = { records: [], blinds: bookData.blinds, tags: bookData.tags };
+  saveBookData();
+  renderAll();
 }
 
 // ========== 初始化 ==========
