@@ -2,102 +2,268 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>德州扑克保险计算器</title>
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background: #0d1f17;
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", sans-serif;
+    background: #0a1f15;
     color: #e8d5a3;
     min-height: 100vh;
-    padding: 10px;
+    padding: 12px;
   }
-  .container { max-width: 720px; margin: 0 auto; }
-  h1 {
-    text-align: center;
-    font-size: 18px;
-    color: #f0c674;
-    margin-bottom: 10px;
-    letter-spacing: 1px;
+  .container { max-width: 680px; margin: 0 auto; }
+
+  /* 顶部标题 */
+  .header {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 14px; padding: 0 4px;
   }
+  .header h1 { font-size: 20px; color: #f0c674; font-weight: 700; }
+  .header .status { font-size: 12px; color: #6a8a78; }
+
   .card {
-    background: #152a20;
-    border: 1px solid #2a4a38;
-    border-radius: 8px;
-    padding: 10px;
-    margin-bottom: 8px;
+    background: linear-gradient(180deg, #13301f 0%, #0f2a1c 100%);
+    border: 1px solid #1e4a32;
+    border-radius: 14px;
+    padding: 14px;
+    margin-bottom: 10px;
   }
   .card-title {
-    font-size: 13px;
-    color: #8fb89a;
-    margin-bottom: 6px;
-    font-weight: 600;
+    font-size: 12px; color: #8fb89a; margin-bottom: 10px; font-weight: 500;
+    display: flex; justify-content: space-between; align-items: center;
   }
-  .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-  .row > div { flex: 1; min-width: 100px; }
-  label { font-size: 11px; color: #8fb89a; display: block; margin-bottom: 3px; }
-  input[type="number"] {
+  .card-title .hint { font-size: 11px; color: #5a7a68; }
+
+  /* 输入框 */
+  .field { margin-bottom: 12px; }
+  .field:last-child { margin-bottom: 0; }
+  .field label { font-size: 13px; color: #8fb89a; display: block; margin-bottom: 6px; }
+  .input-wrap {
+    position: relative;
+    display: flex; align-items: center;
+  }
+  .input-wrap input {
     width: 100%;
-    background: #0d1f17;
-    border: 1px solid #2a4a38;
-    border-radius: 5px;
-    color: #e8d5a3;
-    padding: 6px 8px;
-    font-size: 14px;
+    background: #0a1f15;
+    border: 1px solid #1e4a32;
+    border-radius: 10px;
+    color: #f0c674;
+    padding: 12px 36px 12px 14px;
+    font-size: 17px;
+    font-weight: 600;
     outline: none;
+    transition: border-color 0.2s;
   }
-  input[type="number"]:focus { border-color: #f0c674; }
+  .input-wrap input:focus { border-color: #f0c674; }
+  .input-wrap input::placeholder { color: #3a5a48; font-weight: 400; }
+  .input-wrap .unit {
+    position: absolute; right: 14px;
+    font-size: 15px; color: #5a7a68; font-weight: 500;
+  }
+
+  /* 状态标签行 */
+  .status-row { display: flex; gap: 8px; margin-top: 12px; }
+  .status-tag {
+    flex: 1;
+    background: #0a1f15;
+    border: 1px solid #1e4a32;
+    border-radius: 10px;
+    padding: 8px 12px;
+  }
+  .status-tag .tag-label { font-size: 11px; color: #5a7a68; display: block; margin-bottom: 2px; }
+  .status-tag .tag-value { font-size: 13px; color: #8fb89a; font-weight: 600; }
+  .status-tag.highlight .tag-value { color: #f0c674; }
 
   /* 选牌区 */
-  .card-slots { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+  .card-slots { display: flex; gap: 6px; flex-wrap: wrap; }
   .slot {
-    width: 42px; height: 58px;
-    border: 1px dashed #3a5a48;
-    border-radius: 6px;
+    width: 40px; height: 56px;
+    border: 1.5px dashed #2a5a3e;
+    border-radius: 8px;
     display: flex; align-items: center; justify-content: center;
-    font-size: 11px; color: #4a6a58;
+    font-size: 13px; color: #3a5a48;
     cursor: pointer;
-    background: #0d1f17;
+    background: #0a1f15;
     position: relative;
+    transition: border-color 0.15s;
   }
+  .slot:active { border-color: #f0c674; }
   .slot.filled {
     border-style: solid;
     border-color: #f0c674;
     background: #fff;
     color: #000;
     font-weight: 700;
-    font-size: 16px;
+    font-size: 15px;
   }
   .slot.filled.red { color: #c0392b; }
   .slot .remove {
-    position: absolute; top: -6px; right: -6px;
-    width: 16px; height: 16px;
+    position: absolute; top: -7px; right: -7px;
+    width: 18px; height: 18px;
     background: #c0392b; color: #fff;
-    border-radius: 50%; font-size: 11px;
+    border-radius: 50%; font-size: 12px;
     display: none; align-items: center; justify-content: center;
-    cursor: pointer;
+    cursor: pointer; z-index: 1;
   }
   .slot.filled .remove { display: flex; }
+
+  .btn {
+    background: linear-gradient(180deg, #f0c674 0%, #d4a84a 100%);
+    color: #0a1f15;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+  }
+  .btn:active { opacity: 0.85; }
+  .info-text { font-size: 11px; color: #5a7a68; margin-top: 8px; line-height: 1.5; }
+  .outs-display {
+    display: inline-block;
+    background: #1a3a2a;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 13px;
+    color: #f0c674;
+    font-weight: 700;
+  }
+
+  /* 保险卡片 */
+  .ins-card {
+    background: #0f2a1c;
+    border: 1px solid #1e4a32;
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 10px;
+  }
+  .ins-header {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 4px;
+  }
+  .ins-street { font-size: 12px; color: #8fb89a; font-weight: 600; }
+  .ins-odds-big { text-align: right; }
+  .ins-odds-big .num { font-size: 32px; font-weight: 800; color: #f0c674; line-height: 1; }
+  .ins-odds-big .label { font-size: 11px; color: #5a7a68; margin-top: 2px; }
+  .ins-name { font-size: 18px; font-weight: 700; color: #e8d5a3; margin-bottom: 4px; }
+  .ins-desc { font-size: 11px; color: #5a7a68; margin-bottom: 10px; }
+
+  /* 赔率条 */
+  .odds-bar {
+    display: flex; gap: 1px; margin-bottom: 8px;
+  }
+  .odds-cell {
+    flex: 1 1 0; min-width: 0;
+    text-align: center;
+    padding: 5px 1px;
+    background: transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 1px solid transparent;
+  }
+  .odds-cell .mult { font-size: 10px; font-weight: 600; color: #5a7a68; line-height: 1.2; }
+  .odds-cell .outs { font-size: 9px; color: #3a5a48; line-height: 1.2; }
+  .odds-cell.active {
+    background: #1a3a2a;
+    border-color: #f0c674;
+  }
+  .odds-cell.active .mult { color: #f0c674; font-weight: 700; }
+  .odds-cell.active .outs { color: #f0c674; }
+
+  /* 滑块 */
+  .slider-wrap { margin: 4px 0 14px; }
+  input[type="range"] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 4px;
+    border-radius: 2px;
+    background: linear-gradient(to right, #f0c674 0%, #f0c674 var(--pct, 50%), #1e4a32 var(--pct, 50%), #1e4a32 100%);
+    outline: none;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: #fff;
+    border: 3px solid #f0c674;
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+  }
+
+  /* 快捷比例按钮 */
+  .quick-label { font-size: 12px; color: #5a7a68; margin: 10px 0 6px; }
+  .quick-btns { display: flex; gap: 6px; }
+  .quick-btn {
+    flex: 1;
+    padding: 7px 0;
+    background: #0a1f15;
+    border: 1px solid #1e4a32;
+    border-radius: 20px;
+    color: #8fb89a;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .quick-btn:active { background: #1a3a2a; }
+  .quick-btn.active {
+    background: #1a3a2a;
+    border-color: #f0c674;
+    color: #f0c674;
+  }
+
+  /* 结果摘要条 */
+  .payout-bar {
+    margin-top: 10px;
+    background: #0a1f15;
+    border: 1px solid #1e4a32;
+    border-radius: 10px;
+    padding: 10px 14px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .payout-bar .payout-label { font-size: 12px; color: #5a7a68; }
+  .payout-bar .payout-value { font-size: 18px; font-weight: 700; color: #f0c674; }
+
+  /* 结果区 */
+  .results { display: flex; gap: 6px; flex-direction: column; }
+  .result-item {
+    background: #0a1f15;
+    border-radius: 10px;
+    padding: 10px 12px;
+    border-left: 3px solid #1e4a32;
+  }
+  .result-item.hit { border-left-color: #e74c3c; }
+  .result-item.safe { border-left-color: #27ae60; }
+  .result-label { font-size: 12px; color: #8fb89a; margin-bottom: 4px; font-weight: 600; }
+  .result-values { display: flex; gap: 16px; }
+  .result-values span { font-size: 14px; }
+  .result-values .val { color: #f0c674; font-weight: 700; }
+  .result-values .profit-pos { color: #27ae60; }
+  .result-values .profit-neg { color: #e74c3c; }
+  .result-detail { font-size: 10px; color: #4a6a58; margin-top: 3px; }
 
   /* 牌选择器弹窗 */
   .picker-overlay {
     display: none;
     position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.7);
+    background: rgba(0,0,0,0.75);
     z-index: 100;
     align-items: center; justify-content: center;
   }
   .picker-overlay.active { display: flex; }
   .picker {
-    background: #152a20;
-    border: 1px solid #2a4a38;
-    border-radius: 12px;
+    background: #13301f;
+    border: 1px solid #1e4a32;
+    border-radius: 14px;
     padding: 16px;
     max-width: 360px;
-    width: 90%;
+    width: 92%;
   }
-  .picker h3 { color: #f0c674; font-size: 15px; margin-bottom: 10px; text-align: center; }
+  .picker h3 { color: #f0c674; font-size: 15px; margin-bottom: 12px; text-align: center; }
   .picker-grid {
     display: grid;
     grid-template-columns: repeat(13, 1fr);
@@ -115,163 +281,106 @@
     user-select: none;
   }
   .picker-card.red { color: #c0392b; }
-  .picker-card.disabled { opacity: 0.2; cursor: not-allowed; }
+  .picker-card.disabled { opacity: 0.15; cursor: not-allowed; }
   .picker-close {
-    display: block; margin: 12px auto 0;
-    background: #2a4a38; color: #e8d5a3;
-    border: none; padding: 8px 24px;
-    border-radius: 6px; cursor: pointer;
-    font-size: 13px;
-  }
-
-  /* 赔率条 */
-  .odds-bar {
-    display: flex; gap: 1px; margin: 6px 0;
-  }
-  .odds-cell {
-    flex: 1 1 0; min-width: 0;
-    text-align: center;
-    padding: 4px 1px;
-    background: #0d1f17;
-    border-radius: 3px;
-    cursor: pointer;
-    border: 1px solid transparent;
-  }
-  .odds-cell .mult { font-size: 10px; font-weight: 700; color: #f0c674; line-height: 1.2; }
-  .odds-cell .outs { font-size: 9px; color: #6a8a78; line-height: 1.2; }
-  .odds-cell.active { border-color: #f0c674; background: #1a3a2a; }
-
-  /* 结果区 */
-  .results { display: flex; gap: 6px; flex-direction: column; }
-  .result-item {
-    background: #0d1f17;
-    border-radius: 6px;
-    padding: 8px 10px;
-    border-left: 3px solid #2a4a38;
-  }
-  .result-item.hit { border-left-color: #e74c3c; }
-  .result-item.safe { border-left-color: #27ae60; }
-  .result-label { font-size: 11px; color: #8fb89a; margin-bottom: 3px; }
-  .result-values { display: flex; gap: 14px; }
-  .result-values span { font-size: 13px; }
-  .result-values .val { color: #f0c674; font-weight: 700; }
-  .result-values .profit-pos { color: #27ae60; }
-  .result-values .profit-neg { color: #e74c3c; }
-
-  .btn {
-    background: #f0c674;
-    color: #0d1f17;
-    border: none;
-    padding: 6px 14px;
-    border-radius: 5px;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-  }
-  .btn-secondary {
-    background: #2a4a38;
-    color: #e8d5a3;
-  }
-  .info-text { font-size: 10px; color: #6a8a78; margin-top: 4px; line-height: 1.4; }
-  .outs-display {
-    display: inline-block;
-    background: #1a3a2a;
-    padding: 1px 6px;
-    border-radius: 3px;
-    font-size: 12px;
-    color: #f0c674;
-    font-weight: 700;
-  }
-  .quick-btns {
-    display: flex;
-    gap: 4px;
-    margin: 6px 0;
-  }
-  .quick-btn {
-    flex: 1;
-    min-width: 0;
-    padding: 5px 0;
-    background: #0d1f17;
-    border: 1px solid #2a4a38;
-    border-radius: 5px;
-    color: #8fb89a;
-    font-size: 11px;
-    cursor: pointer;
-    transition: all 0.15s;
-  }
-  .quick-btn:hover {
-    border-color: #f0c674;
-    color: #f0c674;
-  }
-  .quick-btn.active {
-    background: #1a3a2a;
-    border-color: #f0c674;
-    color: #f0c674;
+    display: block; margin: 14px auto 0;
+    background: #1e4a32; color: #e8d5a3;
+    border: none; padding: 10px 32px;
+    border-radius: 20px; cursor: pointer;
+    font-size: 14px; font-weight: 600;
   }
 </style>
 </head>
 <body>
 <div class="container">
-  <h1>♠ 德州扑克保险计算器 ♥</h1>
+  <div class="header">
+    <h1>统一保险工作区</h1>
+    <span class="status" id="headerStatus">等待输入</span>
+  </div>
 
-  <!-- 选牌区 -->
+  <!-- 底池 & 投入 -->
   <div class="card">
-    <div class="card-title">选牌自动算 outs</div>
-    <div class="row" style="margin-bottom:8px;">
-      <div>
-        <label>公共牌（3~5张）</label>
-        <div class="card-slots" id="boardSlots"></div>
+    <div class="field">
+      <label>底池大小</label>
+      <div class="input-wrap">
+        <input type="number" id="pot" placeholder="例如 1000" min="0" oninput="update()">
+        <span class="unit">¥</span>
       </div>
     </div>
-    <div class="row">
-      <div>
+    <div class="field">
+      <label>个人主池投入</label>
+      <div class="input-wrap">
+        <input type="number" id="invest" placeholder="例如 500" min="0" oninput="update()">
+        <span class="unit">¥</span>
+      </div>
+    </div>
+    <div class="status-row">
+      <div class="status-tag highlight">
+        <span class="tag-label">买入口径</span>
+        <span class="tag-value">爆保险不扣本金</span>
+      </div>
+      <div class="status-tag">
+        <span class="tag-label">结算街道</span>
+        <span class="tag-value">转牌 + 河牌</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 选牌算outs -->
+  <div class="card">
+    <div class="card-title">
+      <span>牌面分析</span>
+      <span class="hint">选牌后自动算 outs</span>
+    </div>
+    <div class="field">
+      <label>公共牌（3~5张）</label>
+      <div class="card-slots" id="boardSlots"></div>
+    </div>
+    <div style="display:flex; gap:12px;">
+      <div class="field" style="flex:1;">
         <label>我的手牌</label>
         <div class="card-slots" id="mySlots"></div>
       </div>
-      <div>
+      <div class="field" style="flex:1;">
         <label>对手手牌</label>
         <div class="card-slots" id="oppSlots"></div>
       </div>
     </div>
-    <div style="margin-top:10px; display:flex; gap:8px; align-items:center;">
-      <button class="btn" onclick="calcOuts()">⚡ 算 outs 并填入</button>
-      <span id="outsResult" style="font-size:13px;"></span>
-    </div>
-    <div class="info-text">翻牌后（3张公共牌）算转牌 outs；转牌后（4张公共牌）算河牌 outs。</div>
+    <button class="btn" onclick="calcOuts()">⚡ 算 outs 并填入</button>
+    <div id="outsResult" style="margin-top:8px; font-size:12px;"></div>
   </div>
 
-  <!-- 底池投入 -->
-  <div class="card">
-    <div class="card-title">底池 & 投入</div>
-    <div class="row">
-      <div>
-        <label>底池大小 (¥)</label>
-        <input type="number" id="pot" value="500" min="0" oninput="update()">
-      </div>
-      <div>
-        <label>我已投入 (¥)</label>
-        <input type="number" id="invest" value="250" min="0" oninput="update()">
-      </div>
-    </div>
+  <!-- 保险配置 -->
+  <div class="card-title" style="padding:0 4px;">
+    <span style="font-size:14px; color:#f0c674; font-weight:700;">保险配置 · 转牌 / 河牌</span>
+    <span class="hint">两张卡常显，可同时比较</span>
   </div>
 
   <!-- 转牌保险 -->
-  <div class="card">
-    <div class="card-title">转牌保险</div>
-    <div class="row" style="margin-bottom:8px;">
+  <div class="ins-card">
+    <div class="ins-header">
       <div>
-        <label>转牌 outs</label>
-        <input type="number" id="turnOuts" value="9" min="1" max="45" oninput="onOutsChange('turn')">
+        <div class="ins-street">转牌</div>
+        <div class="ins-name">转牌保险</div>
       </div>
-      <div>
-        <label>赔率</label>
-        <div style="padding:6px 8px; background:#0d1f17; border-radius:5px; font-size:14px; color:#f0c674; font-weight:700;" id="turnOdds">2.8×</div>
-      </div>
-      <div>
-        <label>转牌买金 (¥)</label>
-        <input type="number" id="turnPremium" value="0" min="0" oninput="update()">
+      <div class="ins-odds-big">
+        <div class="num" id="turnOddsBig">2.8×</div>
+        <div class="label">赔率</div>
       </div>
     </div>
+    <div class="ins-desc">发出转牌后将保存本街买入</div>
+    <div class="odds-bar" id="turnOddsBar"></div>
+    <div class="slider-wrap">
+      <input type="range" id="turnSlider" min="1" max="17" value="9" oninput="onSlider('turn', this.value)">
+    </div>
+    <div class="field">
+      <label>转牌保险买入</label>
+      <div class="input-wrap">
+        <input type="number" id="turnPremium" placeholder="自动建议" min="0" oninput="update()">
+        <span class="unit">¥</span>
+      </div>
+    </div>
+    <div class="quick-label">常用比例</div>
     <div class="quick-btns" id="turnQuickBtns">
       <button class="quick-btn" onclick="setQuickPremium('turn',1.0,this)">100%</button>
       <button class="quick-btn" onclick="setQuickPremium('turn',0.85,this)">85%</button>
@@ -279,27 +388,37 @@
       <button class="quick-btn" onclick="setQuickPremium('turn',0.60,this)">60%</button>
       <button class="quick-btn" onclick="setQuickPremium('turn',0.50,this)">50%</button>
     </div>
-    <div class="odds-bar" id="turnOddsBar"></div>
-    <div class="info-text">买金 = 赔付 ÷ 赔率；赔付上限 = 底池。转牌爆了拿赔付不扣买金，不爆扣买金进河牌。</div>
+    <div class="payout-bar">
+      <span class="payout-label">转牌爆保险可收</span>
+      <span class="payout-value" id="turnPayout">—</span>
+    </div>
   </div>
 
   <!-- 河牌保险 -->
-  <div class="card">
-    <div class="card-title">河牌保险（转牌安全后才生效）</div>
-    <div class="row" style="margin-bottom:8px;">
+  <div class="ins-card">
+    <div class="ins-header">
       <div>
-        <label>河牌 outs</label>
-        <input type="number" id="riverOuts" value="9" min="1" max="44" oninput="onOutsChange('river')">
+        <div class="ins-street">河牌</div>
+        <div class="ins-name">河牌保险</div>
       </div>
-      <div>
-        <label>赔率</label>
-        <div style="padding:6px 8px; background:#0d1f17; border-radius:5px; font-size:14px; color:#f0c674; font-weight:700;" id="riverOdds">2.8×</div>
-      </div>
-      <div>
-        <label>河牌买金 (¥)</label>
-        <input type="number" id="riverPremium" value="50" min="0" oninput="update()">
+      <div class="ins-odds-big">
+        <div class="num" id="riverOddsBig">2.8×</div>
+        <div class="label">赔率</div>
       </div>
     </div>
+    <div class="ins-desc">转牌后按新公共牌刷新河牌 outs</div>
+    <div class="odds-bar" id="riverOddsBar"></div>
+    <div class="slider-wrap">
+      <input type="range" id="riverSlider" min="1" max="17" value="9" oninput="onSlider('river', this.value)">
+    </div>
+    <div class="field">
+      <label>河牌保险买入</label>
+      <div class="input-wrap">
+        <input type="number" id="riverPremium" placeholder="自动建议" min="0" oninput="update()">
+        <span class="unit">¥</span>
+      </div>
+    </div>
+    <div class="quick-label">常用比例</div>
     <div class="quick-btns" id="riverQuickBtns">
       <button class="quick-btn" onclick="setQuickPremium('river',1.0,this)">100%</button>
       <button class="quick-btn" onclick="setQuickPremium('river',0.85,this)">85%</button>
@@ -307,17 +426,19 @@
       <button class="quick-btn" onclick="setQuickPremium('river',0.60,this)">60%</button>
       <button class="quick-btn" onclick="setQuickPremium('river',0.50,this)">50%</button>
     </div>
-    <div class="odds-bar" id="riverOddsBar"></div>
-    <div class="info-text">河牌 outs 可与转牌不同。只买河牌就把转牌买金设为0。</div>
+    <div class="payout-bar">
+      <span class="payout-label">河牌爆保险可收</span>
+      <span class="payout-value" id="riverPayout">—</span>
+    </div>
   </div>
 
-  <!-- 结果 -->
+  <!-- 结算结果 -->
   <div class="card">
-    <div class="card-title">结算结果</div>
+    <div class="card-title"><span>结算结果</span><span class="hint">爆保险 vs 不爆 一屏看全</span></div>
     <div class="results" id="results"></div>
   </div>
 
-  <div class="info-text" style="text-align:center; padding:8px;">
+  <div class="info-text" style="text-align:center; padding:6px 0 12px;">
     爆保险 = 危险牌发出，拿赔付、不扣买金；不爆 = 赢底池、扣买金。
   </div>
 </div>
@@ -352,7 +473,6 @@ SUITS.forEach(s => RANKS.forEach(r => allCards.push(r+s)));
 let selected = { board: [], my: [], opp: [] };
 let pickerTarget = null;
 
-function cardStr(c) { return c; }
 function isRed(c) { return SUIT_RED[c.slice(-1)]; }
 
 // ========== 选牌UI ==========
@@ -416,10 +536,7 @@ function closePicker() {
 
 // ========== 牌型评估 ==========
 function evalHand(cards) {
-  // cards: array of 5-7 strings like 'As'
-  // returns rank array for comparison (higher = better)
   const parsed = cards.map(c => ({rank: RANK_VAL[c.slice(0,-1)], suit: c.slice(-1)}));
-  // 生成所有5张组合，取最佳
   let best = [0];
   const combos = getCombos(parsed, 5);
   for (const combo of combos) {
@@ -430,33 +547,25 @@ function evalHand(cards) {
 }
 function getCombos(arr, k) {
   const res = [];
-  function helper(start, curr) {
+  (function helper(start, curr) {
     if (curr.length === k) { res.push([...curr]); return; }
-    for (let i = start; i < arr.length; i++) {
-      curr.push(arr[i]);
-      helper(i+1, curr);
-      curr.pop();
-    }
-  }
-  helper(0, []);
+    for (let i = start; i < arr.length; i++) { curr.push(arr[i]); helper(i+1, curr); curr.pop(); }
+  })(0, []);
   return res;
 }
 function eval5(cards) {
   const ranks = cards.map(c => c.rank).sort((a,b) => b-a);
   const suits = cards.map(c => c.suit);
   const isFlush = suits.every(s => s === suits[0]);
-  // 顺子检测（含A2345）
   const uniqueRanks = [...new Set(ranks)].sort((a,b) => b-a);
   let isStraight = false, straightHigh = 0;
   if (uniqueRanks.length === 5) {
     if (uniqueRanks[0] - uniqueRanks[4] === 4) { isStraight = true; straightHigh = uniqueRanks[0]; }
     if (uniqueRanks.join(',') === '14,5,4,3,2') { isStraight = true; straightHigh = 5; }
   }
-  // 计数
   const count = {};
   ranks.forEach(r => count[r] = (count[r]||0)+1);
   const counts = Object.entries(count).map(([r,c]) => ({rank:+r, count:c})).sort((a,b) => b.count-a.count || b.rank-a.rank);
-
   if (isFlush && isStraight) return [8, straightHigh];
   if (counts[0].count === 4) return [7, counts[0].rank, counts[1].rank];
   if (counts[0].count === 3 && counts[1].count === 2) return [6, counts[0].rank, counts[1].rank];
@@ -478,25 +587,22 @@ function compareRanks(a, b) {
 // ========== 算outs ==========
 function calcOuts() {
   if (selected.my.length < 2 || selected.opp.length < 2 || selected.board.length < 3) {
-    document.getElementById('outsResult').innerHTML = '<span style="color:#e74c3c;">请先选齐我的手牌、对手手牌和至少3张公共牌</span>';
+    document.getElementById('outsResult').innerHTML = '<span style="color:#e74c3c;">请先选齐手牌和至少3张公共牌</span>';
     return;
   }
   const known = new Set([...selected.board, ...selected.my, ...selected.opp]);
   const remaining = allCards.filter(c => !known.has(c));
 
   if (selected.board.length === 3) {
-    // 算转牌outs：发一张转牌后，6张牌比大小
     let outs = 0;
     for (const turn of remaining) {
       const myBest = evalHand([...selected.my, ...selected.board, turn]);
       const oppBest = evalHand([...selected.opp, ...selected.board, turn]);
       if (compareRanks(oppBest, myBest) > 0) outs++;
     }
-    document.getElementById('turnOuts').value = outs;
-    onOutsChange('turn');
+    setOuts('turn', outs);
     document.getElementById('outsResult').innerHTML = `转牌 outs = <span class="outs-display">${outs}</span> 张（剩余${remaining.length}张未知）`;
   } else if (selected.board.length >= 4) {
-    // 算河牌outs：4张公共牌，再发一张河牌
     const board4 = selected.board.slice(0, 4);
     const known4 = new Set([...board4, ...selected.my, ...selected.opp]);
     const remaining4 = allCards.filter(c => !known4.has(c));
@@ -506,14 +612,23 @@ function calcOuts() {
       const oppBest = evalHand([...selected.opp, ...board4, river]);
       if (compareRanks(oppBest, myBest) > 0) outs++;
     }
-    document.getElementById('riverOuts').value = outs;
-    onOutsChange('river');
+    setOuts('river', outs);
     document.getElementById('outsResult').innerHTML = `河牌 outs = <span class="outs-display">${outs}</span> 张（剩余${remaining4.length}张未知）`;
   }
   update();
 }
 
-// ========== 赔率条 ==========
+// ========== 赔率条 & 滑块 ==========
+function setOuts(prefix, outs) {
+  outs = Math.max(1, Math.min(outs, 45));
+  document.getElementById(prefix+'Slider').value = Math.min(outs, 17);
+  onOutsChange(prefix, outs);
+}
+
+function onSlider(prefix, val) {
+  onOutsChange(prefix, parseInt(val));
+}
+
 function renderOddsBar(elId, activeOuts, prefix) {
   const el = document.getElementById(elId);
   el.innerHTML = '';
@@ -521,31 +636,32 @@ function renderOddsBar(elId, activeOuts, prefix) {
     const cell = document.createElement('div');
     cell.className = 'odds-cell' + (outs === activeOuts ? ' active' : '');
     cell.innerHTML = `<div class="mult">${getOdds(outs)}</div><div class="outs">${outs}</div>`;
-    cell.onclick = () => {
-      document.getElementById(prefix+'Outs').value = outs;
-      onOutsChange(prefix);
-    };
+    cell.onclick = () => onOutsChange(prefix, outs);
     el.appendChild(cell);
   }
 }
 
-function onOutsChange(prefix) {
-  const outs = parseInt(document.getElementById(prefix+'Outs').value) || 1;
-  document.getElementById(prefix+'Odds').textContent = getOdds(outs) + '×';
+function onOutsChange(prefix, outs) {
+  if (!outs) outs = parseInt(document.getElementById(prefix+'Slider').value) || 1;
+  const odds = getOdds(outs);
+  document.getElementById(prefix+'OddsBig').textContent = odds + '×';
+  document.getElementById(prefix+'Slider').value = Math.min(outs, 17);
+  // 更新滑块进度条颜色
+  const pct = ((Math.min(outs,17) - 1) / 16 * 100);
+  document.getElementById(prefix+'Slider').style.setProperty('--pct', pct + '%');
   renderOddsBar(prefix+'OddsBar', Math.min(outs,17), prefix);
   update();
 }
 
-// 快捷比例按钮：按底池比例算买金（赔付额=底池×比例，买金=赔付额÷赔率）
+// ========== 快捷比例 ==========
 function setQuickPremium(prefix, ratio, btn) {
   const pot = parseFloat(document.getElementById('pot').value) || 0;
-  const outs = parseInt(document.getElementById(prefix+'Outs').value) || 1;
-  const odds = getOdds(outs);
+  const sliderVal = parseInt(document.getElementById(prefix+'Slider').value) || 1;
+  const odds = getOdds(sliderVal);
   if (odds <= 0) return;
   const payout = Math.min(pot * ratio, pot);
   const premium = payout / odds;
   document.getElementById(prefix+'Premium').value = Math.round(premium * 100) / 100;
-  // 高亮当前按钮
   document.querySelectorAll('#' + prefix + 'QuickBtns .quick-btn').forEach(b => b.classList.remove('active'));
   if (btn) btn.classList.add('active');
   update();
@@ -555,41 +671,41 @@ function setQuickPremium(prefix, ratio, btn) {
 function update() {
   const pot = parseFloat(document.getElementById('pot').value) || 0;
   const invest = parseFloat(document.getElementById('invest').value) || 0;
-  const turnOuts = parseInt(document.getElementById('turnOuts').value) || 1;
-  const riverOuts = parseInt(document.getElementById('riverOuts').value) || 1;
+  const turnOuts = parseInt(document.getElementById('turnSlider').value) || 1;
+  const riverOuts = parseInt(document.getElementById('riverSlider').value) || 1;
   const turnPremium = parseFloat(document.getElementById('turnPremium').value) || 0;
   const riverPremium = parseFloat(document.getElementById('riverPremium').value) || 0;
 
   const turnOdds = getOdds(turnOuts);
   const riverOdds = getOdds(riverOuts);
-  // 赔付 = 买金 × 赔率，上限底池
   const turnPayout = Math.min(turnPremium * turnOdds, pot);
   const riverPayout = Math.min(riverPremium * riverOdds, pot);
 
+  // 爆保险可收
+  document.getElementById('turnPayout').textContent = turnPremium > 0 ? '¥' + turnPayout.toFixed(0) : '—';
+  document.getElementById('riverPayout').textContent = riverPremium > 0 ? '¥' + riverPayout.toFixed(0) : '—';
+
+  // 头部状态
+  document.getElementById('headerStatus').textContent = (pot > 0) ? '已就绪' : '等待输入';
+
+  // 三种结果
   const results = document.getElementById('results');
   results.innerHTML = '';
 
-  // 情况1：转牌爆
-  // 转牌爆了 → 拿转牌赔付，不扣转牌买金；河牌保险未触发不扣
   const r1Recv = turnPayout;
   const r1Profit = r1Recv - invest;
   addResult('转牌爆（终局）', r1Recv, r1Profit, 'hit',
     turnPremium > 0 ? `转牌赔付 ¥${turnPayout.toFixed(0)}` : '未买转牌保险，输掉底池');
 
-  // 情况2：转牌安全，河牌爆
-  // 转牌不爆 → 扣转牌买金；河牌爆 → 拿河牌赔付，不扣河牌买金
   const r2Recv = riverPayout;
-  const r2Cost = turnPremium; // 转牌买金扣了
-  const r2Profit = r2Recv - invest - r2Cost;
+  const r2Profit = r2Recv - invest - turnPremium;
   addResult('转安全 · 河牌爆', r2Recv, r2Profit, 'hit',
     `扣转牌买金 ¥${turnPremium.toFixed(0)}，河牌赔付 ¥${riverPayout.toFixed(0)}`);
 
-  // 情况3：双安全
-  // 都不爆 → 赢底池，扣转牌买金 + 河牌买金
   const r3Recv = pot - turnPremium - riverPremium;
   const r3Profit = r3Recv - invest;
   addResult('转河双安全（赢池）', r3Recv, r3Profit, 'safe',
-    `底池 ¥${pot.toFixed(0)} − 转牌买金 ¥${turnPremium.toFixed(0)} − 河牌买金 ¥${riverPremium.toFixed(0)}`);
+    `底池 ¥${pot.toFixed(0)} − 转牌 ¥${turnPremium.toFixed(0)} − 河牌 ¥${riverPremium.toFixed(0)}`);
 }
 
 function addResult(label, receive, profit, cls, detail) {
@@ -603,15 +719,15 @@ function addResult(label, receive, profit, cls, detail) {
       <span>实收 <span class="val">¥${receive.toFixed(0)}</span></span>
       <span>净盈亏 <span class="val ${profitCls}">${profitSign}${profit.toFixed(0)}</span></span>
     </div>
-    <div class="info-text">${detail}</div>
+    <div class="result-detail">${detail}</div>
   `;
   document.getElementById('results').appendChild(div);
 }
 
 // ========== 初始化 ==========
 renderSlots();
-renderOddsBar('turnOddsBar', 9, 'turn');
-renderOddsBar('riverOddsBar', 9, 'river');
+onOutsChange('turn', 9);
+onOutsChange('river', 9);
 update();
 
 // ========== Service Worker 自动更新 ==========
