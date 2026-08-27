@@ -269,6 +269,7 @@
   }
   .picker-overlay.active { display: flex; }
   .picker {
+    position: relative;
     background: #13301f;
     border: 1px solid #1e4a32;
     border-radius: 16px;
@@ -278,6 +279,21 @@
     max-height: 90vh;
     overflow-y: auto;
   }
+  .picker-x {
+    position: absolute;
+    top: 12px; right: 12px;
+    width: 30px; height: 30px;
+    background: #1e4a32;
+    border: none;
+    border-radius: 50%;
+    color: #8fb89a;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    line-height: 1;
+    z-index: 2;
+  }
+  .picker-x:active { background: #2a5a3e; color: #f0c674; }
   .picker h3 { color: #f0c674; font-size: 16px; margin-bottom: 14px; text-align: center; }
   .picker-grid {
     display: grid;
@@ -481,8 +497,9 @@
 </div>
 
 <!-- 牌选择器 -->
-<div class="picker-overlay" id="pickerOverlay">
+<div class="picker-overlay" id="pickerOverlay" onclick="if(event.target===this)closePicker()">
   <div class="picker">
+    <button class="picker-x" onclick="closePicker()">×</button>
     <h3 id="pickerTitle">选择牌</h3>
     <div class="picker-grid" id="pickerGrid"></div>
     <div class="picker-footer">
@@ -833,6 +850,10 @@ update();
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('service-worker.js').then(reg => {
     navigator.serviceWorker.addEventListener('controllerchange', () => window.location.reload());
+    // 每次从后台切回应用时主动检查更新
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') reg.update();
+    });
   }).catch(() => {});
 }
 </script>
