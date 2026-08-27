@@ -11,40 +11,40 @@
     background: #0d1f17;
     color: #e8d5a3;
     min-height: 100vh;
-    padding: 16px;
+    padding: 10px;
   }
   .container { max-width: 720px; margin: 0 auto; }
   h1 {
     text-align: center;
-    font-size: 22px;
+    font-size: 18px;
     color: #f0c674;
-    margin-bottom: 16px;
-    letter-spacing: 2px;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
   }
   .card {
     background: #152a20;
     border: 1px solid #2a4a38;
-    border-radius: 10px;
-    padding: 14px;
-    margin-bottom: 12px;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 8px;
   }
   .card-title {
-    font-size: 14px;
+    font-size: 13px;
     color: #8fb89a;
-    margin-bottom: 10px;
+    margin-bottom: 6px;
     font-weight: 600;
   }
-  .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-  .row > div { flex: 1; min-width: 120px; }
-  label { font-size: 12px; color: #8fb89a; display: block; margin-bottom: 4px; }
+  .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .row > div { flex: 1; min-width: 100px; }
+  label { font-size: 11px; color: #8fb89a; display: block; margin-bottom: 3px; }
   input[type="number"] {
     width: 100%;
     background: #0d1f17;
     border: 1px solid #2a4a38;
-    border-radius: 6px;
+    border-radius: 5px;
     color: #e8d5a3;
-    padding: 8px 10px;
-    font-size: 15px;
+    padding: 6px 8px;
+    font-size: 14px;
     outline: none;
   }
   input[type="number"]:focus { border-color: #f0c674; }
@@ -126,36 +126,34 @@
 
   /* 赔率条 */
   .odds-bar {
-    display: flex; gap: 2px; margin: 8px 0;
-    overflow-x: auto;
-    padding-bottom: 4px;
+    display: flex; gap: 1px; margin: 6px 0;
   }
   .odds-cell {
-    flex: 1; min-width: 32px;
+    flex: 1 1 0; min-width: 0;
     text-align: center;
-    padding: 6px 2px;
+    padding: 4px 1px;
     background: #0d1f17;
-    border-radius: 4px;
+    border-radius: 3px;
     cursor: pointer;
     border: 1px solid transparent;
   }
-  .odds-cell .mult { font-size: 13px; font-weight: 700; color: #f0c674; }
-  .odds-cell .outs { font-size: 10px; color: #6a8a78; }
+  .odds-cell .mult { font-size: 10px; font-weight: 700; color: #f0c674; line-height: 1.2; }
+  .odds-cell .outs { font-size: 9px; color: #6a8a78; line-height: 1.2; }
   .odds-cell.active { border-color: #f0c674; background: #1a3a2a; }
 
   /* 结果区 */
-  .results { display: flex; gap: 8px; flex-direction: column; }
+  .results { display: flex; gap: 6px; flex-direction: column; }
   .result-item {
     background: #0d1f17;
-    border-radius: 8px;
-    padding: 10px 12px;
+    border-radius: 6px;
+    padding: 8px 10px;
     border-left: 3px solid #2a4a38;
   }
   .result-item.hit { border-left-color: #e74c3c; }
   .result-item.safe { border-left-color: #27ae60; }
-  .result-label { font-size: 12px; color: #8fb89a; margin-bottom: 4px; }
-  .result-values { display: flex; gap: 16px; }
-  .result-values span { font-size: 14px; }
+  .result-label { font-size: 11px; color: #8fb89a; margin-bottom: 3px; }
+  .result-values { display: flex; gap: 14px; }
+  .result-values span { font-size: 13px; }
   .result-values .val { color: #f0c674; font-weight: 700; }
   .result-values .profit-pos { color: #27ae60; }
   .result-values .profit-neg { color: #e74c3c; }
@@ -164,9 +162,9 @@
     background: #f0c674;
     color: #0d1f17;
     border: none;
-    padding: 8px 16px;
-    border-radius: 6px;
-    font-size: 13px;
+    padding: 6px 14px;
+    border-radius: 5px;
+    font-size: 12px;
     font-weight: 600;
     cursor: pointer;
   }
@@ -174,31 +172,30 @@
     background: #2a4a38;
     color: #e8d5a3;
   }
-  .info-text { font-size: 11px; color: #6a8a78; margin-top: 6px; line-height: 1.5; }
+  .info-text { font-size: 10px; color: #6a8a78; margin-top: 4px; line-height: 1.4; }
   .outs-display {
     display: inline-block;
     background: #1a3a2a;
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 13px;
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 12px;
     color: #f0c674;
     font-weight: 700;
   }
   .quick-btns {
     display: flex;
-    gap: 6px;
-    margin: 8px 0;
-    flex-wrap: wrap;
+    gap: 4px;
+    margin: 6px 0;
   }
   .quick-btn {
     flex: 1;
-    min-width: 48px;
-    padding: 6px 0;
+    min-width: 0;
+    padding: 5px 0;
     background: #0d1f17;
     border: 1px solid #2a4a38;
-    border-radius: 6px;
+    border-radius: 5px;
     color: #8fb89a;
-    font-size: 12px;
+    font-size: 11px;
     cursor: pointer;
     transition: all 0.15s;
   }
@@ -268,7 +265,7 @@
       </div>
       <div>
         <label>赔率</label>
-        <div style="padding:8px 10px; background:#0d1f17; border-radius:6px; font-size:15px; color:#f0c674; font-weight:700;" id="turnOdds">2.8×</div>
+        <div style="padding:6px 8px; background:#0d1f17; border-radius:5px; font-size:14px; color:#f0c674; font-weight:700;" id="turnOdds">2.8×</div>
       </div>
       <div>
         <label>转牌买金 (¥)</label>
@@ -296,7 +293,7 @@
       </div>
       <div>
         <label>赔率</label>
-        <div style="padding:8px 10px; background:#0d1f17; border-radius:6px; font-size:15px; color:#f0c674; font-weight:700;" id="riverOdds">2.8×</div>
+        <div style="padding:6px 8px; background:#0d1f17; border-radius:5px; font-size:14px; color:#f0c674; font-weight:700;" id="riverOdds">2.8×</div>
       </div>
       <div>
         <label>河牌买金 (¥)</label>
