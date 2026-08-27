@@ -18,7 +18,7 @@ self.addEventListener('fetch', (event) => {
     fetch(event.request)
       .then(response => {
         const copy = response.clone();
-        caches.open('poker-insurance').then(cache => cache.put(event.request, copy));
+        caches.open('poker-insurance-v1.0.0').then(cache => cache.put(event.request, copy));
         return response;
       })
       .catch(() => caches.match(event.request))
