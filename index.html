@@ -17,11 +17,23 @@
 
   /* 顶部标题 */
   .header {
-    display: flex; justify-content: space-between; align-items: baseline;
+    display: flex; justify-content: space-between; align-items: center;
     margin-bottom: 14px; padding: 0 4px;
   }
   .header h1 { font-size: 20px; color: #f0c674; font-weight: 700; }
+  .header-right { display: flex; align-items: center; gap: 10px; }
   .header .status { font-size: 12px; color: #6a8a78; }
+  .reset-btn {
+    background: transparent;
+    border: 1px solid #2a5a3e;
+    color: #8fb89a;
+    padding: 5px 14px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .reset-btn:active { background: #1a3a2a; border-color: #f0c674; color: #f0c674; }
 
   .card {
     background: linear-gradient(180deg, #13301f 0%, #0f2a1c 100%);
@@ -317,7 +329,10 @@
 <div class="container">
   <div class="header">
     <h1>统一保险工作区</h1>
-    <span class="status" id="headerStatus">等待输入</span>
+    <div class="header-right">
+      <span class="status" id="headerStatus">等待输入</span>
+      <button class="reset-btn" onclick="resetAll()">↺ 重置</button>
+    </div>
   </div>
 
   <!-- 底池 & 投入 -->
@@ -791,6 +806,21 @@ function addResult(label, receive, profit, cls, detail) {
     <div class="result-detail">${detail}</div>
   `;
   document.getElementById('results').appendChild(div);
+}
+
+// ========== 重置 ==========
+function resetAll() {
+  document.getElementById('pot').value = '';
+  document.getElementById('invest').value = '';
+  document.getElementById('turnPremium').value = '';
+  document.getElementById('riverPremium').value = '';
+  selected = { board: [], my: [], opp: [] };
+  renderSlots();
+  document.getElementById('outsResult').innerHTML = '';
+  document.querySelectorAll('.quick-btn').forEach(b => b.classList.remove('active'));
+  onOutsChange('turn', 9);
+  onOutsChange('river', 9);
+  update();
 }
 
 // ========== 初始化 ==========
