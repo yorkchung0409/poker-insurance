@@ -613,6 +613,13 @@ renderSlots();
 renderOddsBar('turnOddsBar', 9, 'turn');
 renderOddsBar('riverOddsBar', 9, 'river');
 update();
+
+// ========== Service Worker 自动更新 ==========
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js').then(reg => {
+    navigator.serviceWorker.addEventListener('controllerchange', () => window.location.reload());
+  }).catch(() => {});
+}
 </script>
 </body>
 </html>
