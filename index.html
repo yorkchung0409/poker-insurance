@@ -391,16 +391,20 @@
   }
   .filter-bar select {
     flex: 1;
+    min-width: 0;
     background: #0f2a1c;
     border: 1px solid #1e4a32;
     border-radius: 8px;
     color: #e8d5a3;
-    padding: 8px;
+    padding: 8px 4px;
     font-size: 12px;
     outline: none;
     appearance: none;
     text-align: center;
     cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   /* ========== 记录列表 ========== */
@@ -545,7 +549,98 @@
   input[type="date"]::-webkit-calendar-picker-indicator {
     filter: invert(0.7) sepia(1) saturate(3) hue-rotate(10deg);
   }
+
+  /* ========== 分组统计 ========== */
+  .group-toggle { display: flex; gap: 6px; margin-bottom: 10px; }
+  .group-toggle .g-btn {
+    flex: 1; padding: 7px 0; background: #0a1f15; border: 1px solid #1e4a32;
+    border-radius: 8px; color: #8fb89a; font-size: 12px; font-weight: 600; cursor: pointer;
+  }
+  .group-toggle .g-btn.active { background: #1a3a2a; border-color: #f0c674; color: #f0c674; }
+  .group-row {
+    display: flex; align-items: center; padding: 8px 0; border-bottom: 1px solid #1a3a2a; gap: 8px;
+  }
+  .group-row:last-child { border-bottom: none; }
+  .group-name { font-size: 13px; color: #e8d5a3; font-weight: 600; width: 70px; flex-shrink: 0; }
+  .group-bar-wrap { flex: 1; height: 16px; background: #0a1f15; border-radius: 4px; overflow: hidden; position: relative; }
+  .group-bar { height: 100%; border-radius: 4px; }
+  .group-bar.pos { background: linear-gradient(90deg,#27ae60,#1e7a43); }
+  .group-bar.neg { background: linear-gradient(90deg,#e74c3c,#a93226); }
+  .group-meta { font-size: 11px; color: #5a7a68; width: 96px; flex-shrink: 0; text-align: right; }
+  .group-meta b { color: #f0c674; font-weight: 700; }
+  .group-meta .neg { color: #e74c3c; }
+  .group-meta .pos { color: #27ae60; }
+
+  /* ========== 图表 ========== */
+  .chart-toggle { display: flex; gap: 6px; margin-bottom: 10px; }
+  .chart-toggle .c-btn {
+    flex: 1; padding: 7px 0; background: #0a1f15; border: 1px solid #1e4a32;
+    border-radius: 8px; color: #8fb89a; font-size: 12px; font-weight: 600; cursor: pointer;
+  }
+  .chart-toggle .c-btn.active { background: #1a3a2a; border-color: #f0c674; color: #f0c674; }
+  .chart-svg { width: 100%; display: block; }
+  .chart-legend { font-size: 11px; color: #5a7a68; text-align: center; margin-top: 6px; }
+  .chart-empty { text-align: center; padding: 24px 0; color: #3a5a48; font-size: 13px; }
+
+  /* ========== 编辑按钮 ========== */
+  .record-edit {
+    background: none; border: none; color: #5a7a68; font-size: 14px; cursor: pointer;
+    padding: 4px 8px; flex-shrink: 0;
+  }
+  .record-edit:active { color: #f0c674; }
+  .record-list-controls {
+    display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0 10px;
+  }
+  .record-list-controls .btn-mini {
+    background: #1a3a2a; border: 1px solid #1e4a32; color: #cfe8d8;
+    border-radius: 8px; padding: 6px 10px; font-size: 12px; cursor: pointer;
+  }
+  .record-list-controls .btn-mini.active { border-color: #f0c674; color: #f0c674; }
+  .peak-list { margin-top: 8px; }
+  .peak-title { font-size: 12px; color: #8fb89a; font-weight: 600; margin-bottom: 6px; }
+  .peak-item {
+    display: grid; grid-template-columns: 68px 56px 1fr; gap: 8px; align-items: center;
+    padding: 8px 0; border-bottom: 1px solid #1a3a2a; font-size: 12px;
+  }
+  .peak-item:last-child { border-bottom: none; }
+  .peak-item .money.pos { color: #27ae60; }
+  .peak-item .money.neg { color: #e74c3c; }
+
+  /* ========== 粘贴导入弹窗 ========== */
+  .paste-area {
+    width: 100%; min-height: 150px; background: #0a1f15; border: 1px solid #1e4a32;
+    border-radius: 10px; color: #e8d5a3; padding: 12px; font-size: 13px; line-height: 1.6;
+    outline: none; resize: vertical; font-family: inherit;
+  }
+  .paste-area:focus { border-color: #f0c674; }
+  .paste-tip { font-size: 11px; color: #5a7a68; margin: 8px 0; line-height: 1.6; }
+  .paste-tip code { color: #f0c674; background: #1a3a2a; padding: 1px 5px; border-radius: 4px; }
+  .preview-table { margin-top: 10px; font-size: 11px; }
+  .preview-table .pt-row {
+    display: grid; grid-template-columns: 78px 34px 56px 40px 48px 1fr; gap: 4px;
+    padding: 6px 4px; border-bottom: 1px solid #1a3a2a; align-items: center;
+  }
+  .preview-table .pt-head { color: #8fb89a; font-weight: 600; border-bottom: 1px solid #1e4a32; }
+  .preview-table .pt-row .ok { color: #27ae60; }
+  .preview-table .pt-row .bad { color: #e74c3c; }
+  .preview-table .pt-row .amt { font-weight: 700; }
+  .preview-summary { font-size: 12px; color: #8fb89a; margin: 8px 0; }
+  .modal.wide { max-width: 580px; }
+  .import-toolbar { display: flex; align-items: center; gap: 10px; margin: 8px 0; }
+  .file-btn { display: inline-block; padding: 6px 12px; background: #1e4a32; color: #cfe8d8; border-radius: 6px; cursor: pointer; font-size: 13px; }
+  .file-btn:hover { background: #27613f; }
+  #importFileName { font-size: 12px; color: #8fb89a; }
+  .col-map { display: flex; flex-wrap: wrap; gap: 8px 12px; margin: 8px 0; font-size: 12px; color: #8fb89a; }
+  .col-map label { display: flex; align-items: center; gap: 4px; }
+  .col-map select { background: #0f2a1e; color: #cfe8d8; border: 1px solid #1e4a32; border-radius: 4px; padding: 2px 4px; font-size: 12px; max-width: 130px; }
+  .agg-toggle { display: flex; gap: 16px; margin: 6px 0 10px; font-size: 13px; color: #cfe8d8; }
+  .agg-toggle label { display: flex; align-items: center; gap: 4px; cursor: pointer; }
+  .pt-row.pt-check { grid-template-columns: 24px 64px 36px 56px 40px 48px 46px 1fr; }
+  .pt-row.pt-check input[type=checkbox] { width: 16px; height: 16px; accent-color: #27ae60; cursor: pointer; }
+  .pt-row .pk { color: #6fa382; font-size: 11px; }
 </style>
+<!-- Excel 解析（仅导入 .xlsx/.xls 时按需使用，离线时可改存 CSV 导入） -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
 <body>
 <div class="container">
@@ -729,11 +824,19 @@
           <span class="stat-label">总盈亏</span>
           <span class="stat-value" id="statProfit">0</span>
         </div>
-        <div class="stat-item">
-          <span class="stat-label">时薪</span>
-          <span class="stat-value" id="statHourly">0</span>
-        </div>
+      <div class="stat-item">
+        <span class="stat-label">时薪</span>
+        <span class="stat-value" id="statHourly">0</span>
       </div>
+      <div class="stat-item">
+        <span class="stat-label">胜率</span>
+        <span class="stat-value" id="statWinRate">0%</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">场均盈亏</span>
+        <span class="stat-value" id="statAvg">0</span>
+      </div>
+    </div>
     </div>
 
     <!-- 操作按钮 -->
@@ -741,7 +844,9 @@
 
     <!-- 筛选栏 -->
     <div class="filter-bar">
-      <select id="filterMonth" onchange="renderRecords()"></select>
+      <select id="filterYear" onchange="renderRecords()"><option value="">全部年份</option></select>
+      <select id="filterMonth" onchange="renderRecords()"><option value="">全部月份</option></select>
+      <select id="filterDay" onchange="renderRecords()"><option value="">全部日期</option></select>
       <select id="filterTag" onchange="renderRecords()"><option value="">全部标签</option></select>
       <select id="filterBlind" onchange="renderRecords()"><option value="">全部盲注</option></select>
     </div>
@@ -749,7 +854,35 @@
     <!-- 记录列表 -->
     <div class="card">
       <div class="card-title"><span>记录明细</span><span class="hint" id="recordCount">0 条</span></div>
+      <div class="record-list-controls" id="recordListControls"></div>
       <div id="recordList"></div>
+    </div>
+
+    <!-- 峰值排行 -->
+    <div class="card">
+      <div class="card-title"><span>峰值排行</span><span class="hint">输最多 / 赢最多 前5局</span></div>
+      <div id="peakListLose"></div>
+      <div id="peakListWin" style="margin-top:14px;"></div>
+    </div>
+
+    <!-- 分组统计 -->
+    <div class="card">
+      <div class="card-title"><span>分组盈亏</span><span class="hint">按维度汇总</span></div>
+      <div class="group-toggle">
+        <button class="g-btn active" id="grpBlind" onclick="setGroupBy('blind')">按盲注</button>
+        <button class="g-btn" id="grpTag" onclick="setGroupBy('tag')">按标签</button>
+      </div>
+      <div id="groupStats"></div>
+    </div>
+
+    <!-- 图表 -->
+    <div class="card">
+      <div class="card-title"><span>盈亏图表</span><span class="hint">随筛选实时刷新</span></div>
+      <div class="chart-toggle">
+        <button class="c-btn active" id="chartTrend" onclick="setChartMode('trend')">累计走势</button>
+        <button class="c-btn" id="chartGroup" onclick="setChartMode('group')">分组对比</button>
+      </div>
+      <div id="chartBox"></div>
     </div>
 
     <!-- 数据管理 -->
@@ -757,7 +890,8 @@
       <div class="card-title">数据管理</div>
       <div class="data-mgmt">
         <button class="btn-mgmt" onclick="exportData()">导出数据</button>
-        <button class="btn-mgmt" onclick="document.getElementById('importFile').click()">导入数据</button>
+        <button class="btn-mgmt" onclick="openPasteImport()">导入 Excel/CSV</button>
+        <button class="btn-mgmt" onclick="openPasteImport()">粘贴导入（旧方式）</button>
         <button class="btn-mgmt danger" onclick="clearAllData()">清空数据</button>
       </div>
       <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
@@ -848,6 +982,26 @@
     </div>
     <button class="btn" onclick="addBlind()">添加</button>
     <div class="option-list" id="blindList"></div>
+  </div>
+</div>
+
+<!-- 粘贴导入弹窗 -->
+<div class="modal-overlay" id="pasteOverlay">
+  <div class="modal wide">
+    <button class="picker-x" onclick="closePasteImport()">×</button>
+    <h3>导入数据</h3>
+    <div class="paste-tip">
+      <b>方式①（推荐，适合几百场）：</b>从小程序/微信导出 Excel/CSV，点「上传文件」直接选；或在电脑打开后<b>全选复制</b>粘到下方。<br>
+      <b>方式②：</b>仍可一行一条自由文本粘贴（旧方式）。<br>
+      表格会自动识别列（日期 / 输赢或带符号金额 / 时长 / 盲注 / 标签 / 备注），<b>每条=一场</b>直接导入（小程序导出即如此）；微信账单流水选「按日期聚合」还原成每场。
+    </div>
+    <div class="import-toolbar">
+      <label class="file-btn">上传文件<input type="file" id="importFileInput" accept=".xlsx,.xls,.csv,.txt" onchange="handleImportFile(this)" hidden></label>
+      <span id="importFileName"></span>
+    </div>
+    <textarea class="paste-area" id="pasteInput" placeholder="在此粘贴：可从 Excel 复制整表（制表符分隔），或一行一条自由文本…"></textarea>
+    <button class="btn" onclick="parsePasteImport()">解析预览</button>
+    <div id="pastePreview"></div>
   </div>
 </div>
 
@@ -1239,17 +1393,51 @@ function renderStats(records) {
   const hourlyEl = document.getElementById('statHourly');
   hourlyEl.textContent = (s.hourly >= 0 ? '+' : '') + s.hourly;
   hourlyEl.className = 'stat-value ' + (s.hourly >= 0 ? 'positive' : 'negative');
+
+  const wins = records.filter(r => r.result === 'win').length;
+  const winRate = s.sessions > 0 ? Math.round(wins / s.sessions * 100) : 0;
+  const avg = s.sessions > 0 ? Math.round(s.profit / s.sessions * 100) / 100 : 0;
+  const wrEl = document.getElementById('statWinRate');
+  wrEl.textContent = winRate + '%';
+  wrEl.className = 'stat-value ' + (winRate >= 50 ? 'positive' : 'negative');
+  const avgEl = document.getElementById('statAvg');
+  avgEl.textContent = (avg >= 0 ? '+' : '') + avg;
+  avgEl.className = 'stat-value ' + (avg >= 0 ? 'positive' : 'negative');
 }
 
 // ========== 筛选器 ==========
 function renderFilters() {
-  // 月份
+  const records = bookData.records;
+  const yearSel = document.getElementById('filterYear');
   const monthSel = document.getElementById('filterMonth');
-  const months = [...new Set(bookData.records.map(r => r.date.substring(0, 7)))].sort().reverse();
+  const daySel = document.getElementById('filterDay');
+
+  // 年份
+  const years = [...new Set(records.map(r => r.date.substring(0, 4)))].sort().reverse();
+  const curYear = yearSel.value;
+  yearSel.innerHTML = '<option value="">全部年份</option>' +
+    years.map(y => `<option value="${y}">${y}年</option>`).join('');
+  if (years.includes(curYear)) yearSel.value = curYear;
+
+  // 月份（随年份联动）
+  const yearFilter = yearSel.value;
+  const monthSource = yearFilter ? records.filter(r => r.date.startsWith(yearFilter)) : records;
+  const months = [...new Set(monthSource.map(r => r.date.substring(0, 7)))].sort().reverse();
   const curMonth = monthSel.value;
   monthSel.innerHTML = '<option value="">全部月份</option>' +
-    months.map(m => `<option value="${m}">${m}</option>`).join('');
-  if (months.includes(curMonth)) monthSel.value = curMonth;
+    months.map(m => `<option value="${m}">${parseInt(m.substring(5), 10)}月</option>`).join('');
+  if (months.includes(curMonth)) monthSel.value = curMonth; else monthSel.value = '';
+
+  // 日期（随年月联动）
+  const monthFilter = monthSel.value;
+  const daySource = monthFilter
+    ? records.filter(r => r.date.startsWith(monthFilter))
+    : (yearFilter ? records.filter(r => r.date.startsWith(yearFilter)) : records);
+  const days = [...new Set(daySource.map(r => r.date))].sort().reverse();
+  const curDay = daySel.value;
+  daySel.innerHTML = '<option value="">全部日期</option>' +
+    days.map(d => `<option value="${d}">${parseInt(d.substring(8), 10)}日</option>`).join('');
+  if (days.includes(curDay)) daySel.value = curDay; else daySel.value = '';
 
   // 标签
   const tagSel = document.getElementById('filterTag');
@@ -1267,45 +1455,129 @@ function renderFilters() {
 }
 
 function getFilteredRecords() {
+  const year = document.getElementById('filterYear').value;
   const month = document.getElementById('filterMonth').value;
+  const day = document.getElementById('filterDay').value;
   const tag = document.getElementById('filterTag').value;
   const blind = document.getElementById('filterBlind').value;
   return bookData.records.filter(r => {
+    if (year && !r.date.startsWith(year)) return false;
     if (month && !r.date.startsWith(month)) return false;
+    if (day && r.date !== day) return false;
     if (tag && !(r.tags || []).includes(tag)) return false;
     if (blind && r.blind !== blind) return false;
     return true;
   }).sort((a, b) => b.date.localeCompare(a.date) || b.id - a.id);
 }
 
+function getListVisibleRecords(records) {
+  if (recordListLimit < 0 || records.length <= recordListLimit) return records;
+  return records.slice(0, recordListLimit);
+}
+
+function formatLocalDate(d = new Date()) {
+  return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+}
+
+function formatDurationText(v) {
+  const n = Number(v);
+  return Number.isFinite(n) && n > 0 ? `${Math.round(n * 100) / 100}h` : '—';
+}
+
+function formatAmountText(v) {
+  const n = Number(v);
+  return Number.isFinite(n) ? (Math.round(n * 100) / 100) : '—';
+}
+
+function getPeakRecords(records, type, n = 5) {
+  return [...records]
+    .filter(r => type === 'win' ? r.result === 'win' : r.result === 'lose')
+    .sort((a, b) => (type === 'win' ? b.amount - a.amount : b.amount - a.amount) || b.date.localeCompare(a.date) || b.id - a.id)
+    .slice(0, n);
+}
+
+function setRecordLimit(limit) {
+  recordListLimit = limit;
+  renderRecords();
+}
+
+function loadMoreRecords() {
+  if (recordListLimit < 0) return;
+  recordListLimit += recordListStep;
+  renderRecords();
+}
+
+function loadAllRecords() {
+  recordListLimit = -1;
+  renderRecords();
+}
+
+function renderPeakLists(records) {
+  const winEl = document.getElementById('peakListWin');
+  const loseEl = document.getElementById('peakListLose');
+  const wins = getPeakRecords(records, 'win', 5);
+  const loses = getPeakRecords(records, 'lose', 5);
+  const renderOne = (title, arr, cls) => {
+    if (arr.length === 0) return `<div class="empty-state">暂无数据</div>`;
+    return `<div class="peak-title">${title}</div>${arr.map((r, i) => {
+      const meta = [r.date, r.blind, formatDurationText(r.duration), (r.tags || []).join('/') || '', r.note || ''].filter(Boolean).join(' · ');
+      return `<div class="peak-item">
+        <span>#${i + 1}</span>
+        <span class="money ${cls}">${cls === 'pos' ? '+' : '-'}${r.amount}</span>
+        <div>${meta}</div>
+      </div>`;
+    }).join('')}`;
+  };
+  loseEl.innerHTML = renderOne('输最多前5局', loses, 'neg');
+  winEl.innerHTML = renderOne('赢最多前5局', wins, 'pos');
+}
+
 // ========== 记录列表 ==========
 function renderRecords() {
+  renderFilters();
   const records = getFilteredRecords();
   const listEl = document.getElementById('recordList');
-  document.getElementById('recordCount').textContent = records.length + ' 条';
+  const countEl = document.getElementById('recordCount');
+  countEl.textContent = records.length + ' 条';
 
   if (records.length === 0) {
     listEl.innerHTML = '<div class="empty-state">暂无记录，点上方"记一笔"开始</div>';
-    renderStats(bookData.records);
+    document.getElementById('recordListControls').innerHTML = '';
+    document.getElementById('peakListWin').innerHTML = '<div class="empty-state">暂无数据</div>';
+    document.getElementById('peakListLose').innerHTML = '<div class="empty-state">暂无数据</div>';
+    renderBookkeepingAnalytics(bookData.records);
     return;
   }
 
-  listEl.innerHTML = records.map(r => {
-    const profit = r.result === 'win' ? r.amount : -r.amount;
+  const visible = getListVisibleRecords(records);
+  const moreLeft = records.length - visible.length;
+  const controls = [];
+  if (recordListLimit >= 0 && records.length > recordListLimit) {
+    controls.push(`<button class="btn-mini ${recordListLimit === 10 ? 'active' : ''}" onclick="setRecordLimit(10)">最近10条</button>`);
+    controls.push(`<button class="btn-mini" onclick="loadMoreRecords()">更多10条</button>`);
+    controls.push(`<button class="btn-mini ${recordListLimit < 0 ? 'active' : ''}" onclick="loadAllRecords()">加载全部</button>`);
+    controls.push(`<span class="hint">当前显示 ${visible.length} / ${records.length} 条${moreLeft > 0 ? `，还可看 ${moreLeft} 条` : ''}</span>`);
+  }
+  document.getElementById('recordListControls').innerHTML = controls.join('');
+
+  renderBookkeepingAnalytics(records);
+  listEl.innerHTML = visible.map(r => {
     const cls = r.result === 'win' ? 'win' : 'lose';
     const sign = r.result === 'win' ? '+' : '-';
-    const meta = [r.blind, r.duration + 'h', (r.tags || []).join(' '), r.note].filter(Boolean).join(' · ');
+    const meta = [r.blind, formatDurationText(r.duration), (r.tags || []).join(' '), r.note].filter(Boolean).join(' · ');
     return `<div class="record-item">
       <span class="record-date">${r.date.substring(5)}</span>
       <div class="record-info">
         <div class="record-blinds">${meta}</div>
       </div>
       <span class="record-amount ${cls}">${sign}${r.amount}</span>
+      <button class="record-edit" onclick="openRecordForm(${r.id})">✎</button>
       <button class="record-del" onclick="deleteRecord(${r.id})">×</button>
     </div>`;
   }).join('');
 
   renderStats(records);
+  renderPeakLists(records);
 }
 
 function deleteRecord(id) {
@@ -1317,7 +1589,498 @@ function deleteRecord(id) {
 
 function renderAll() {
   renderFilters();
+  recordListLimit = 10;
   renderRecords();
+}
+
+// ========== 分组统计 & 图表 ==========
+let currentGroupBy = 'blind';
+let chartMode = 'trend';
+let lastParsed = [];
+let lastMode = 'text';        // 'text' | 'table'
+let lastTable = null;         // 表格解析结果
+let checkedSet = new Set();   // 表格模式勾选的行索引
+let recordListLimit = 10;     // 记录列表默认只显示最近10条
+let recordListStep = 10;      // 每次“查询更多”再增加10条
+
+function pad2(n) { return n < 10 ? '0' + n : '' + n; }
+
+function renderBookkeepingAnalytics(records) {
+  renderGroupStats(records);
+  renderCharts(records);
+}
+
+function setGroupBy(key) {
+  currentGroupBy = key;
+  document.getElementById('grpBlind').classList.toggle('active', key === 'blind');
+  document.getElementById('grpTag').classList.toggle('active', key === 'tag');
+  const records = getFilteredRecords();
+  renderGroupStats(records);
+  if (chartMode === 'group') renderCharts(records);
+}
+
+function setChartMode(mode) {
+  chartMode = mode;
+  document.getElementById('chartTrend').classList.toggle('active', mode === 'trend');
+  document.getElementById('chartGroup').classList.toggle('active', mode === 'group');
+  renderCharts(getFilteredRecords());
+}
+
+function aggregateGroups(records, key) {
+  const map = {};
+  records.forEach(r => {
+    const vals = key === 'blind' ? [r.blind] : (r.tags || []);
+    vals.forEach(g => {
+      if (!g) return;
+      if (!map[g]) map[g] = { name: g, profit: 0, n: 0, wins: 0 };
+      map[g].profit += r.result === 'win' ? r.amount : -r.amount;
+      map[g].n++;
+      if (r.result === 'win') map[g].wins++;
+    });
+  });
+  return Object.values(map).sort((a, b) => b.profit - a.profit);
+}
+
+function renderGroupStats(records) {
+  const el = document.getElementById('groupStats');
+  const groups = aggregateGroups(records, currentGroupBy);
+  if (groups.length === 0) { el.innerHTML = '<div class="empty-state">暂无数据</div>'; return; }
+  const maxAbs = Math.max(...groups.map(g => Math.abs(g.profit)), 1);
+  el.innerHTML = groups.map(g => {
+    const w = Math.max(4, Math.round(Math.abs(g.profit) / maxAbs * 100));
+    const cls = g.profit >= 0 ? 'pos' : 'neg';
+    const sign = g.profit >= 0 ? '+' : '';
+    const wr = g.n > 0 ? Math.round(g.wins / g.n * 100) : 0;
+    return `<div class="group-row">
+      <span class="group-name">${g.name}</span>
+      <div class="group-bar-wrap"><div class="group-bar ${cls}" style="width:${w}%"></div></div>
+      <span class="group-meta"><b class="${cls}">${sign}${g.profit}</b> · ${g.n}场 · ${wr}%</span>
+    </div>`;
+  }).join('');
+}
+
+function renderCharts(records) {
+  const box = document.getElementById('chartBox');
+  box.innerHTML = chartMode === 'trend' ? buildTrendSVG(records) : buildGroupBarSVG(records, currentGroupBy);
+}
+
+function buildTrendSVG(records) {
+  const sorted = [...records].sort((a, b) => a.date.localeCompare(b.date));
+  if (sorted.length === 0) return '<div class="chart-empty">暂无数据</div>';
+  let cum = 0;
+  const pts = sorted.map(r => { cum += (r.result === 'win' ? r.amount : -r.amount); return cum; });
+  const W = 320, H = 150, padL = 36, padR = 12, padT = 12, padB = 20;
+  const maxV = Math.max(...pts, 0), minV = Math.min(...pts, 0);
+  const range = (maxV - minV) || 1;
+  const innerW = W - padL - padR, innerH = H - padT - padB;
+  const x = i => padL + (pts.length === 1 ? innerW / 2 : i / (pts.length - 1) * innerW);
+  const y = v => padT + (maxV - v) / range * innerH;
+  const zeroY = y(0);
+  const poly = pts.map((v, i) => `${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
+  const lastV = pts[pts.length - 1];
+  const lastCls = lastV >= 0 ? '#27ae60' : '#e74c3c';
+  const areaPts = `${padL},${zeroY.toFixed(1)} ${poly} ${(x(pts.length - 1)).toFixed(1)},${zeroY.toFixed(1)}`;
+  const minYv = y(minV), maxYv = y(maxV);
+  const minY = minYv.toFixed(1), maxY = maxYv.toFixed(1);
+  return `<svg class="chart-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet">
+    <line x1="${padL}" y1="${zeroY.toFixed(1)}" x2="${W - padR}" y2="${zeroY.toFixed(1)}" stroke="#5a7a68" stroke-width="1" stroke-dasharray="3 3"/>
+    <polygon points="${areaPts}" fill="${lastCls}" opacity="0.12"/>
+    <polyline points="${poly}" fill="none" stroke="#f0c674" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+    ${pts.map((v, i) => `<circle cx="${x(i).toFixed(1)}" cy="${y(v).toFixed(1)}" r="2.5" fill="#f0c674"/>`).join('')}
+    <text x="${padL - 4}" y="${(maxYv + 3).toFixed(1)}" fill="#5a7a68" font-size="9" text-anchor="end">${maxV}</text>
+    <text x="${padL - 4}" y="${(minYv + 3).toFixed(1)}" fill="#5a7a68" font-size="9" text-anchor="end">${minV}</text>
+    <text x="${(x(pts.length - 1)).toFixed(1)}" y="${(y(lastV) - 6).toFixed(1)}" fill="${lastCls}" font-size="10" text-anchor="end" font-weight="700">${lastV >= 0 ? '+' : ''}${lastV}</text>
+  </svg>
+  <div class="chart-legend">累计盈亏走势（按日期，共 ${pts.length} 笔）</div>`;
+}
+
+function buildGroupBarSVG(records, key) {
+  const groups = aggregateGroups(records, key);
+  if (groups.length === 0) return '<div class="chart-empty">暂无数据</div>';
+  const W = 320, H = 150, padL = 36, padR = 12, padT = 14, padB = 30;
+  const maxAbs = Math.max(...groups.map(g => Math.abs(g.profit)), 1);
+  const innerH = H - padT - padB;
+  const yZero = padT + innerH / 2;
+  const scale = innerH / 2 / maxAbs;
+  const n = groups.length;
+  const bw = Math.min(44, (W - padL - padR) / n - 8);
+  const gap = (W - padL - padR - bw * n) / (n + 1);
+  let bars = '';
+  groups.forEach((g, i) => {
+    const h = Math.abs(g.profit) * scale;
+    const x = padL + gap + i * (bw + gap);
+    const top = g.profit >= 0 ? yZero - h : yZero;
+    const fill = g.profit >= 0 ? '#27ae60' : '#e74c3c';
+    bars += `<rect x="${x.toFixed(1)}" y="${top.toFixed(1)}" width="${bw.toFixed(1)}" height="${Math.max(1, h).toFixed(1)}" rx="3" fill="${fill}"/>`;
+    const label = g.name.length > 5 ? g.name.slice(0, 5) : g.name;
+    bars += `<text x="${(x + bw / 2).toFixed(1)}" y="${(H - 12).toFixed(1)}" fill="#8fb89a" font-size="9" text-anchor="middle">${label}</text>`;
+    bars += `<text x="${(x + bw / 2).toFixed(1)}" y="${(top - 3).toFixed(1)}" fill="${fill}" font-size="9" text-anchor="middle">${g.profit >= 0 ? '+' : ''}${g.profit}</text>`;
+  });
+  return `<svg class="chart-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet">
+    <line x1="${padL}" y1="${yZero.toFixed(1)}" x2="${W - padR}" y2="${yZero.toFixed(1)}" stroke="#5a7a68" stroke-width="1" stroke-dasharray="3 3"/>
+    ${bars}
+  </svg>
+  <div class="chart-legend">各${key === 'blind' ? '盲注级别' : '标签'}盈亏对比</div>`;
+}
+
+// ========== 粘贴导入（兼做小程序数据迁移） ==========
+function openPasteImport() {
+  document.getElementById('pasteInput').value = '';
+  document.getElementById('pastePreview').innerHTML = '';
+  document.getElementById('importFileName').textContent = '';
+  const fi = document.getElementById('importFileInput');
+  if (fi) fi.value = '';
+  lastParsed = [];
+  lastMode = 'text';
+  lastTable = null;
+  checkedSet = new Set();
+  document.getElementById('pasteOverlay').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closePasteImport() {
+  document.getElementById('pasteOverlay').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+function parseOneRecord(line) {
+  let work = line;
+  let date = '', result = '', blind = '', duration = 0, amount = 0, note = '';
+  let m;
+  if ((m = work.match(/(\d{4})[-/](\d{1,2})[-/](\d{1,2})/))) {
+    date = `${m[1]}-${pad2(+m[2])}-${pad2(+m[3])}`;
+    work = work.replace(m[0], ' ');
+  } else if ((m = work.match(/(\d{1,2})月(\d{1,2})[日号]?/))) {
+    date = `${new Date().getFullYear()}-${pad2(+m[1])}-${pad2(+m[2])}`;
+    work = work.replace(m[0], ' ');
+  } else if ((m = work.match(/(\d{1,2})[-/](\d{1,2})(?!\d)/))) {
+    date = `${new Date().getFullYear()}-${pad2(+m[1])}-${pad2(+m[2])}`;
+    work = work.replace(m[0], ' ');
+  }
+  if (/赢|胜|win/i.test(work)) result = 'win';
+  else if (/输|败|lose/i.test(work)) result = 'lose';
+  else if (/\+/i.test(work)) result = 'win';
+  else if (/-/i.test(work)) result = 'lose';
+  else result = 'win';
+  work = work.replace(/赢|输|胜|败|win|lose/gi, ' ');
+  if ((m = work.match(/(\d+(?:\.\d+)?)\s*\/\s*(\d+(?:\.\d+)?)/))) {
+    blind = `${m[1]}/${m[2]}`;
+    work = work.replace(m[0], ' ');
+  }
+  if ((m = work.match(/(\d+(?:\.\d+)?)\s*(?:h|小时|时)/i))) {
+    duration = parseFloat(m[1]);
+    work = work.replace(m[0], ' ');
+  }
+  if ((m = work.match(/(\d+(?:\.\d+)?)\s*万/))) {
+    amount = parseFloat(m[1]) * 10000;
+    work = work.replace(m[0], ' ');
+  } else if ((m = work.match(/(?:¥|￥|元|RMB)?\s*(\d+(?:\.\d+)?)/))) {
+    amount = parseFloat(m[1]);
+    work = work.replace(m[0], ' ');
+  }
+  if (!amount || amount <= 0) return null;
+  const tags = [];
+  bookData.tags.forEach(t => { if (line.includes(t) && !tags.includes(t)) tags.push(t); });
+  const tagEsc = bookData.tags.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
+  if (tagEsc) work = work.replace(new RegExp(tagEsc, 'g'), ' ');
+  note = work.replace(/\s+/g, ' ').trim();
+  if (duration === 0) {
+    note = note.replace(/^[+\-]\s*/, '');
+    const nm = note.match(/^(\d+(?:\.\d+)?)(?:\s|$)/);
+    if (nm) { duration = parseFloat(nm[1]); note = note.slice(nm[0].length).trim(); }
+  }
+  return { date, result, amount: Math.round(amount * 100) / 100, duration, blind, tags, note };
+}
+
+function parsePasteImport() {
+  const raw = document.getElementById('pasteInput').value.trim();
+  if (!raw) { alert('请先粘贴记录，或上传 CSV 文件'); return; }
+  // 判断是否为表格（多列、含常见分隔符且多行）
+  const lines = raw.split('\n').map(l => l.trim()).filter(Boolean);
+  const delim = detectDelimiter(lines[0] || '');
+  const firstCols = (lines[0] || '').split(delim).length;
+  const looksTable = delim && firstCols >= 2 && lines.length >= 2;
+  if (looksTable) {
+    lastMode = 'table';
+    lastTable = parseTable(lines, delim);
+    checkedSet = new Set(lastTable.rows.map((_, i) => i));
+    renderTablePreview();
+  } else {
+    lastMode = 'text';
+    const parsed = [], errors = [];
+    lines.forEach((line, idx) => {
+      const rec = parseOneRecord(line);
+      if (rec) parsed.push(rec);
+      else errors.push({ line: idx + 1, text: line });
+    });
+    lastParsed = parsed;
+    renderPastePreview(parsed, errors);
+  }
+}
+
+function detectDelimiter(firstLine) {
+  const cands = ['\t', ',', ';', '|'];
+  let best = '', bestN = 0;
+  cands.forEach(d => {
+    const n = firstLine.split(d).length - 1;
+    if (n > bestN) { bestN = n; best = d; }
+  });
+  return best;
+}
+
+// 自动探测列：返回 {date, sign, amount, note} 列索引
+function autoMapCols(headers) {
+  const find = (kws) => {
+    for (let i = 0; i < headers.length; i++) {
+      const h = (headers[i] || '').toLowerCase();
+      if (kws.some(k => h.includes(k))) return i;
+    }
+    return -1;
+  };
+  // 关键词按精确度排序，避免把「交易类型」误判为输赢列、把「交易时间」误判为备注列
+  const map = {
+    date: find(['交易时间', '记账日期', '日期', '时间', '记账', 'date', '创建']),
+    sign: find(['收/支', '收支', '收入/支出', '收入', '支出', '方向', '结果', '输赢', '赢', '输', '状态']),
+    amount: find(['金额(元)', '金额', '交易金额', '数额', '总价', '价钱', 'amount']),
+    duration: find(['时长', '小时', '时间长度', 'duration', 'hours']),
+    blind: find(['盲注', '级别', '盲注级别', 'blind', 'stakes']),
+    tags: find(['标签', '分类', 'tags', 'label']),
+    note: find(['对方', '商品', '说明', '备注', '名称', '摘要', '昵称'])
+  };
+  if (map.amount < 0) {
+    // 兜底：最后一个看起来是数字/金额的列
+    for (let i = headers.length - 1; i >= 0; i--) {
+      if (/元|额|金|价|amount/i.test(headers[i] || '')) { map.amount = i; break; }
+    }
+  }
+  return map;
+}
+
+function parseTable(lines, delim) {
+  const headers = lines[0].split(delim).map(s => s.trim());
+  const rows = [];
+  for (let i = 1; i < lines.length; i++) {
+    const cells = lines[i].split(delim).map(s => s.trim());
+    if (cells.length < 2 && !cells[0]) continue;
+    rows.push({ cells });
+  }
+  const colMap = autoMapCols(headers);
+  // 默认聚合方式：有"收/支"类列视为账单流水 → 按日期聚合；否则每条独立（一行=一场）
+  const defaultAgg = colMap.sign >= 0 && /收|支|方向|类型|状态/.test(headers[colMap.sign] || '') ? 'date' : 'row';
+  return { headers, rows, colMap, agg: defaultAgg };
+}
+
+// 从一行单元格 + 当前列映射提取 {date, result, amount, note, duration, blind, tags}
+function extractRow(tbl, r, colMap) {
+  const cells = r.cells;
+  const cm = colMap || currentColMap(tbl);
+  let date = '', result = 'win', amount = 0, note = '', duration = 0, blind = '', tags = [];
+  const dcell = cm.date >= 0 ? (cells[cm.date] || '') : '';
+  const m = dcell.match(/(\d{4})[-/年](\d{1,2})[-/月](\d{1,2})/);
+  if (m) date = `${m[1]}-${pad2(+m[2])}-${pad2(+m[3])}`;
+  else { const m2 = dcell.match(/(\d{1,2})[-/](\d{1,2})/); if (m2) date = `${new Date().getFullYear()}-${pad2(+m2[1])}-${pad2(+m2[2])}`; }
+  const scell = cm.sign >= 0 ? (cells[cm.sign] || '') : '';
+  const acell = cm.amount >= 0 ? (cells[cm.amount] || '') : '';
+  const amtMatch = (acell || '').replace(/[¥￥,\s]/g, '').match(/-?\d+(?:\.\d+)?/);
+  const signed = amtMatch ? parseFloat(amtMatch[0]) : 0;
+  amount = Math.abs(signed);
+  if (cm.sign >= 0) {
+    if (/收入|收$|收\s*入|\+|^收/.test(scell) || /赢/.test(scell)) result = 'win';
+    else if (/支出|支$|付|^-/.test(scell) || /输/.test(scell)) result = 'lose';
+    else result = signed < 0 ? 'lose' : 'win';
+  } else {
+    // 无单独收支列时，按金额正负号判断（小程序导出：数额带正负号）
+    result = signed < 0 ? 'lose' : 'win';
+  }
+  if (cm.duration >= 0) { const d = parseFloat((cells[cm.duration] || '').trim()); if (!isNaN(d)) duration = d; }
+  if (cm.blind >= 0) blind = (cells[cm.blind] || '').trim();
+  if (cm.tags >= 0) { const tv = (cells[cm.tags] || '').trim(); if (tv) tags = tv.split(/[/\、,， ]+/).filter(Boolean); }
+  if (cm.note >= 0) {
+    const parts = [];
+    if (cm.note !== cm.date && cm.note !== cm.amount) parts.push(cells[cm.note] || '');
+    note = parts.join(' ').trim();
+  }
+  return { date, result, amount: Math.round(amount * 100) / 100, note, duration, blind, tags };
+}
+
+function currentColMap(tbl) {
+  // 读取下拉框当前值
+  const g = id => { const e = document.getElementById(id); return e ? +e.value : -1; };
+  return {
+    date: g('cmDate'),
+    sign: g('cmSign'),
+    amount: g('cmAmount'),
+    duration: g('cmDuration'),
+    blind: g('cmBlind'),
+    tags: g('cmTags'),
+    note: g('cmNote')
+  };
+}
+
+function renderTablePreview() {
+  const tbl = lastTable;
+  if (!tbl) return;
+  const box = document.getElementById('pastePreview');
+  const opts = (sel, idx, label) => `<label>${label}<select id="${sel}" onchange="setColMap('${sel.replace('cm', '').toLowerCase()}', this.value)">` +
+    tbl.headers.map((h, i) => `<option value="${i}" ${i === idx ? 'selected' : ''}>${h || '(空)'}</option>`).join('') +
+    `<option value="-1" ${idx < 0 ? 'selected' : ''}>（无）</option></select></label>`;
+  const cm = tbl.colMap;
+  let html = `<div class="col-map">
+    ${opts('cmDate', cm.date, '日期列')}
+    ${opts('cmSign', cm.sign, '输赢/收支列')}
+    ${opts('cmAmount', cm.amount, '金额列')}
+    ${opts('cmDuration', cm.duration, '时长列')}
+    ${opts('cmBlind', cm.blind, '盲注列')}
+    ${opts('cmTags', cm.tags, '标签列')}
+    ${opts('cmNote', cm.note, '备注列')}
+  </div>`;
+  html += `<div class="agg-toggle">
+    <span>聚合方式：</span>
+    <label><input type="radio" name="agg" value="row" ${tbl.agg === 'row' ? 'checked' : ''} onchange="setAgg('row')">每条=一场（小程序导出）</label>
+    <label><input type="radio" name="agg" value="date" ${tbl.agg === 'date' ? 'checked' : ''} onchange="setAgg('date')">按日期聚合（微信账单流水）</label>
+  </div>`;
+  // 预览表（初始渲染直接使用自动识别的 colMap，避免下拉框尚未入 DOM 导致读不到值）
+  html += `<div class="preview-table"><div class="pt-row pt-head pt-check"><span></span><span>日期</span><span>输赢</span><span>金额</span><span>时长</span><span>盲注</span><span>标签</span><span>备注</span></div>`;
+  tbl.rows.forEach((r, i) => {
+    const ex = extractRow(tbl, r, tbl.colMap);
+    const checked = checkedSet.has(i) ? 'checked' : '';
+    html += `<div class="pt-row pt-check">
+      <input type="checkbox" ${checked} onchange="toggleCheck(${i}, this.checked)">
+      <span>${ex.date.slice(5) || '-'}</span>
+      <span class="${ex.result === 'win' ? 'ok' : 'bad'}">${ex.result === 'win' ? '赢' : '输'}</span>
+      <span class="amt">${ex.amount}</span>
+      <span>${ex.duration || '-'}</span>
+      <span class="pk">${ex.blind || '-'}</span>
+      <span class="pk">${(ex.tags || []).join('/') || '-'}</span>
+      <span class="pk">${ex.note || '-'}</span>
+    </div>`;
+  });
+  html += `</div>`;
+  const cnt = checkedSet.size;
+  html += `<div style="margin-top:10px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+    <button class="btn" onclick="confirmImport()">确认导入 ${cnt} 条</button>
+    <button class="btn-mgmt" onclick="selectAll(true)">全选</button>
+    <button class="btn-mgmt" onclick="selectAll(false)">全不选</button>
+    <span class="hint">已选 ${cnt} / ${tbl.rows.length}</span>
+  </div>`;
+  box.innerHTML = html;
+}
+
+function setAgg(v) { if (lastTable) { lastTable.agg = v; renderTablePreview(); } }
+function setColMap(key, val) { if (lastTable) { lastTable.colMap[key] = +val; renderTablePreview(); } }
+function toggleCheck(i, v) { if (v) checkedSet.add(i); else checkedSet.delete(i); renderTablePreview(); }
+function selectAll(v) {
+  if (!lastTable) return;
+  checkedSet = new Set();
+  if (v) lastTable.rows.forEach((_, i) => checkedSet.add(i));
+  renderTablePreview();
+}
+
+function confirmImport() {
+  let toAdd = [];
+  if (lastMode === 'text') {
+    toAdd = lastParsed.map(r => ({ date: r.date, result: r.result, amount: r.amount, duration: r.duration, blind: r.blind, tags: [...r.tags], note: r.note }));
+  } else if (lastMode === 'table' && lastTable) {
+    const cm = lastTable.colMap;
+    const sel = lastTable.rows.filter((_, i) => checkedSet.has(i)).map(r => extractRow(lastTable, r, cm));
+    if (lastTable.agg === 'date') {
+      const byDate = {};
+      sel.forEach(e => {
+        const d = e.date || '未知日期';
+        if (!byDate[d]) byDate[d] = { date: d, net: 0, duration: 0, note: [] };
+        byDate[d].net += (e.result === 'win' ? e.amount : -e.amount);
+        byDate[d].duration += (e.duration || 0);
+        if (e.note) byDate[d].note.push(e.note);
+      });
+      toAdd = Object.values(byDate).map(g => ({
+        date: g.date, result: g.net >= 0 ? 'win' : 'lose', amount: Math.round(Math.abs(g.net) * 100) / 100,
+        duration: Math.round(g.duration * 100) / 100, blind: '', tags: [], note: [...new Set(g.note)].slice(0, 3).join('/')
+      })).filter(x => x.amount > 0);
+    } else {
+      toAdd = sel.map(e => ({ date: e.date, result: e.result, amount: e.amount, duration: e.duration || 0, blind: e.blind || '', tags: e.tags || [], note: e.note }));
+    }
+  }
+  if (toAdd.length === 0) { alert('没有可导入的数据'); return; }
+  if (!confirm(`确认导入 ${toAdd.length} 条记录？将合并进现有数据。`)) return;
+  toAdd.forEach(r => {
+    bookData.records.push({
+      id: Date.now() + '_' + Math.random().toString(36).slice(2, 8),
+      date: r.date || formatLocalDate(),
+      result: r.result, amount: r.amount, duration: r.duration || 0,
+      blind: r.blind || bookData.blinds[0] || '',
+      tags: r.tags || [], note: r.note || ''
+    });
+  });
+  saveBookData();
+  closePasteImport();
+  renderAll();
+  alert(`成功导入 ${toAdd.length} 条`);
+}
+
+function renderPastePreview(parsed, errors) {
+  const box = document.getElementById('pastePreview');
+  if (parsed.length === 0 && errors.length === 0) { box.innerHTML = ''; return; }
+  let html = `<div class="preview-summary">成功解析 <b style="color:#27ae60">${parsed.length}</b> 条${errors.length ? `，跳过 <b style="color:#e74c3c">${errors.length}</b> 条` : ''}</div>`;
+  if (parsed.length) {
+    html += `<div class="preview-table"><div class="pt-row pt-head"><span>日期</span><span>输赢</span><span>金额</span><span>时长</span><span>盲注</span><span>备注/标签</span></div>`;
+    html += parsed.map(r => `<div class="pt-row">
+      <span>${r.date.slice(5)}</span>
+      <span class="${r.result === 'win' ? 'ok' : 'bad'}">${r.result === 'win' ? '赢' : '输'}</span>
+      <span class="amt">${r.amount}</span>
+      <span>${formatDurationText(r.duration)}</span>
+      <span>${r.blind || '-'}</span>
+      <span>${(r.tags.join(',') + ' ' + (r.note || '')).trim() || '-'}</span>
+    </div>`).join('');
+    html += `</div><button class="btn" onclick="confirmImport()">确认导入 ${parsed.length} 条</button>`;
+  }
+  if (errors.length) {
+    html += `<div class="preview-table" style="margin-top:10px;">` +
+      errors.map(e => `<div class="pt-row"><span style="grid-column:1/7" class="bad">第${e.line}行无法识别：${e.text}</span></div>`).join('') +
+      `</div>`;
+  }
+  box.innerHTML = html;
+}
+
+// ========== 文件上传 ==========
+function handleImportFile(input) {
+  const f = input.files && input.files[0];
+  if (!f) return;
+  document.getElementById('importFileName').textContent = '已选择：' + f.name;
+  const name = (f.name || '').toLowerCase();
+  if (name.endsWith('.xlsx') || name.endsWith('.xls')) {
+    loadXlsxAndImport(f);
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = e => {
+    let text = e.target.result;
+    // 去掉 BOM
+    if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1);
+    document.getElementById('pasteInput').value = text;
+    parsePasteImport();
+  };
+  reader.readAsText(f, 'utf-8');
+}
+
+// 解析 Excel(xlsx/xls)：借助 SheetJS 转成 CSV 后走统一表格解析
+function loadXlsxAndImport(f) {
+  if (typeof XLSX === 'undefined') {
+    alert('Excel 解析组件未加载（可能离线）。\n请联网后重试，或先把文件「另存为 CSV」再导入。');
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = new Uint8Array(e.target.result);
+      const wb = XLSX.read(data, { type: 'array' });
+      const wsName = wb.SheetNames[0];
+      const csv = XLSX.utils.sheet_to_csv(wb.Sheets[wsName]);
+      document.getElementById('pasteInput').value = csv;
+      parsePasteImport();
+    } catch (err) {
+      alert('解析 Excel 失败：' + (err && err.message ? err.message : err) + '\n可先把文件另存为 CSV 再导入。');
+    }
+  };
+  reader.readAsArrayBuffer(f);
 }
 
 // ========== 添加/编辑记录表单 ==========
@@ -1334,7 +2097,7 @@ function openRecordForm(id) {
       selectedBlind = r.blind;
       selectedTags = [...(r.tags || [])];
       document.getElementById('recAmount').value = r.amount;
-      document.getElementById('recDuration').value = r.duration;
+      document.getElementById('recDuration').value = (r.duration == null ? '' : r.duration);
       document.getElementById('recDate').value = r.date;
       document.getElementById('recNote').value = r.note || '';
       document.getElementById('recordFormTitle').textContent = '编辑记录';
@@ -1342,7 +2105,7 @@ function openRecordForm(id) {
   } else {
     document.getElementById('recAmount').value = '';
     document.getElementById('recDuration').value = '';
-    document.getElementById('recDate').value = new Date().toISOString().substring(0, 10);
+    document.getElementById('recDate').value = formatLocalDate();
     document.getElementById('recNote').value = '';
     document.getElementById('recordFormTitle').textContent = '记一笔';
   }
@@ -1395,7 +2158,8 @@ function toggleTag(t) {
 
 function saveRecord() {
   const amount = parseFloat(document.getElementById('recAmount').value);
-  const duration = parseFloat(document.getElementById('recDuration').value) || 0;
+  const rawDuration = document.getElementById('recDuration').value;
+  const duration = rawDuration === '' ? null : parseFloat(rawDuration);
   const date = document.getElementById('recDate').value;
   const note = document.getElementById('recNote').value.trim();
 
@@ -1405,7 +2169,8 @@ function saveRecord() {
 
   const record = {
     id: editingId || Date.now(),
-    date, result: currentResult, amount, duration,
+    date, result: currentResult, amount,
+    duration: Number.isFinite(duration) ? duration : null,
     blind: selectedBlind, tags: [...selectedTags], note
   };
 
